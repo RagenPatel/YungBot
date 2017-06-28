@@ -1,0 +1,8 @@
+{
+  "name": "",
+  "version": "",
+  "dependencies": {
+    "async.js": "^0.9.5",
+    "request": "^2.81.0"
+  }
+}
