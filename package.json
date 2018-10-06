@@ -1,0 +1,31 @@
+{
+  "name": "yungbot",
+  "version": "1.0.0",
+  "description": "YungBot bot for discord",
+  "main": "YungBot.js",
+  "dependencies": {
+    "async": "^2.6.0",
+    "async.js": "^0.9.5",
+    "bitly": "^5.0.12",
+    "discord.js": "^11.3.2",
+    "dotenv": "^4.0.0",
+    "google-url": "^0.0.4",
+    "googleapis": "^28.1.0",
+    "python-shell": "^0.5.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://RagenPatel@github.com/RagenPatel/LeagueDiscord.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RagenPatel/LeagueDiscord/issues"
+  },
+  "homepage": "https://github.com/RagenPatel/LeagueDiscord#readme"
+}
