@@ -3,6 +3,8 @@ var request = require("request");
 var async = require("async.js");
 var emotes = require("./classes/emotes.js");
 
+require('dotenv').config();
+
 //File reader of .txt so I can upload this project to GitHub without disclosing APIs
 var fs = require('fs')
 

@@ -2,3 +2,4 @@ APIs.txt
 .vscode
 .idea
 node_modules
+*.env
