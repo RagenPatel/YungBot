@@ -2,6 +2,7 @@ var discord = require("discord.js");
 var request = require("request");
 var async = require("async.js");
 var emotes = require("./classes/emotes.js");
+const spawn = require("child_process").spawn;
 
 require('dotenv').config();
 
@@ -63,14 +64,26 @@ var bot = new discord.Client();
 
 
 //Start of bot
-bot.on("message", async function(message){
+bot.on("message", function(message){
     var input = message.content.toLowerCase();
     var sID;
+
+    if (message.author.id == 173610714433454084) {
+        if (input.indexOf("?addemote") == 0) {
+            var msg = input.substr(input.indexOf(" "))
+            msg = msg.substr(1)
+            var arg1 = msg.substr(0, msg.indexOf(" "))
+            msg = msg.substr(msg.indexOf(" "))
+            var arg2 = msg.substr(1)
+            const pythonProcess = spawn('python', ['addEmotes.py', arg1, arg2])
+            pythonProcess
+        }
+    }
 
     //FUNCTIONS
 
     function help(){
-        message.channel.send("Current commands: dlift, na, !**summonerName**," +
+        message.channel.send("Current commands: ?addemote emotename url, dlift, na, !**summonerName**," +
             " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game)");    }
 
     function summonerInfo(input, retStuff) {
@@ -256,10 +269,6 @@ bot.on("message", async function(message){
         }
     }
 
-});
-
-process.on("unhandledRejection", error => {
-    console.error("Unhandled promise rejection", error);
 });
 
 bot.login("Bot "+ discordTok);
