@@ -102,7 +102,8 @@ bot.on("message", function(message){
     }
 
     //test second .js file
-    var checkEmote = emotes.checkForEmotes(input);
+    var checkEmote = false
+    checkEmote = emotes.checkForEmotes(input);
     console.log("checkEmote local: " + checkEmote);
     if (checkEmote != false) {
         message.channel.send({files: ['./emotesImages/'+checkEmote+'.png']});
