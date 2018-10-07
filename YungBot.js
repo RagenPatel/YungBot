@@ -29,7 +29,6 @@ fs.readFile('APIs.txt', 'utf8', function (err,data) {
 
 //console.log("Outside function: " + data);
 
-
 //set API keys here
 var discordTok = process.env.DISCORD_API_TOKEN;
 var api_key = process.env.RIOT_API;
