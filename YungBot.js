@@ -259,6 +259,9 @@ bot.on("message", async function(message){
 
 });
 
+process.on("unhandledRejection", error => {
+    console.error("Unhandled promise rejection", error);
+});
 
 bot.login("Bot "+ discordTok);
 console.log("Starting bot...");
