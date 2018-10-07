@@ -54,6 +54,11 @@ sudo npm install python-shell --save
 
 echo "Python-Shell Installed!"
 
+echo "Installing Python dependencies"
+echo ""
+echo "Installing Pillow"
+pip install Pillow
+
 
 echo ""
 echo "Installed all packages"
