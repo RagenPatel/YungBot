@@ -258,6 +258,8 @@ bot.on("message", function(message){
 
 });
 
-
-bot.login("Bot "+ discordTok);
-console.log("Starting bot...");
+try {
+    await bot.login("Bot "+ discordTok);
+} catch {
+    console.log("Could not log as bot")
+}
