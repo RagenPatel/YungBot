@@ -64,7 +64,7 @@ var bot = new discord.Client();
 
 
 //Start of bot
-bot.on("message", function(message){
+bot.on("message", async function(message){
     var input = message.content.toLowerCase();
     var sID;
 
@@ -105,6 +105,7 @@ bot.on("message", function(message){
     var checkEmote = false
     checkEmote = emotes.checkForEmotes(input);
     console.log("checkEmote local: " + checkEmote);
+
     if (checkEmote != false) {
         message.channel.send({files: ['./emotesImages/'+checkEmote+'.png']});
     }
@@ -258,8 +259,6 @@ bot.on("message", function(message){
 
 });
 
-try {
-    await bot.login("Bot "+ discordTok);
-} catch {
-    console.log("Could not log as bot")
-}
+
+bot.login("Bot "+ discordTok);
+console.log("Starting bot...");
