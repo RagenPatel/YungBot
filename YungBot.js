@@ -207,7 +207,7 @@ bot.on("message", function(message){
             });
         } else {
 
-            var URL = "https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/50227440?api_key=" + api_key;
+            var URL = "https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/50628556?api_key=" + api_key;
             request(URL, function (err, response, body) {
                 if (!err && response.statusCode == 200) {
                     var json = JSON.parse(body);
