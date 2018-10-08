@@ -26,6 +26,14 @@ exports.checkForEmotes = function(input) {
             return 'tf';
         }
 
+        if (inputArr[word] == 'd') {
+            return false
+        }
+
+        if (inputArr[word] == 'tf') {
+            return false
+        }
+
         if (fs.existsSync('./emotesImages/'+inputArr[word]+'.png')) {
             return inputArr[word]
         }

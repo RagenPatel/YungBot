@@ -83,7 +83,7 @@ bot.on("message", function(message){
     //FUNCTIONS
 
     function help(){
-        message.channel.send("Current commands: ?addemote emotename url, dlift, na, !**summonerName**," +
+        message.channel.send("Current commands: ?addemote emotename url (use remove instead of url to remove an emote), dlift, na, !**summonerName**," +
             " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game)");    }
 
     function summonerInfo(input, retStuff) {
@@ -209,16 +209,21 @@ bot.on("message", function(message){
 
             var URL = "https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/50227440?api_key=" + api_key;
             request(URL, function (err, response, body) {
-                var json = JSON.parse(body);
-                console.log(json);
-                if (json['gameid'] != "") {
-                    var timeSec = json['gameLength'];
-                    var timeMin = timeSec / 60 + 4;
-                    if (isNaN(timeMin)) {
-                        message.channel.send("This GUIs not in game.");
-                    } else {
-                        message.channel.send("This person is in game for " + timeMin + " minutes.");
+                if (!err && response.statusCode == 200) {
+                    var json = JSON.parse(body);
+                    console.log(json);
+                    if (json['gameid'] != "") {
+                        var timeSec = json['gameLength'];
+                        var timeMin = timeSec / 60 + 4;
+                        if (isNaN(timeMin)) {
+                            message.channel.send("This GUIs not in game.");
+                        } else {
+                            message.channel.send("This person is in game for " + timeMin + " minutes.");
+                        }
                     }
+                } else {
+                    console.log(err);
+                    message.channel.send("error reaching API")
                 }
             });
         }
