@@ -175,7 +175,7 @@ bot.on("message", function(message){
       var randNum = Math.floor(Math.random() * 100);
       console.log("random num: " + randNum);
       if(randNum < 20) {
-        message.channel.send("LUL 0-10 EleGiggle");
+        message.channel.send("C9 carried themselves out of groups Pog");
       }
     }
 
