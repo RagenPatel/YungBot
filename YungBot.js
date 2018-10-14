@@ -163,19 +163,19 @@ bot.on("message", function(message){
       var randNum = Math.floor(Math.random() * 100);
       console.log("random num: " + randNum);
       if(randNum < 20) {
-        message.channel.send("LUL 0-10");
+        message.channel.send("C9 3-0 out of groups Poggers");
       }
     } else if (input.indexOf("na") == 0 && input.length == 2){
       var randNum = Math.floor(Math.random() * 100);
       console.log("random num: " + randNum);
-      if(randNum < 20) {
-        message.channel.send("LUL 0-10 LUL");
+      if(randNum < 30) {
+        message.channel.send("LETS GO NA Pog");
       }
     } else if (input.indexOf(" na")>=0 && input.length-2 == input.indexOf("na")){
       var randNum = Math.floor(Math.random() * 100);
       console.log("random num: " + randNum);
-      if(randNum < 20) {
-        message.channel.send("C9 carried themselves out of groups Pog");
+      if(randNum < 40) {
+        message.channel.send("LETS GO NA Poggers");
       }
     }
 
