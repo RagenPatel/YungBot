@@ -10,6 +10,26 @@ sudo apt-get install tmux
 echo "Installed!"
 echo ""
 
+echo "Installing Node/npm"
+echo "------\nDownloading..."
+wget https://nodejs.org/dist/v8.9.0/node-v8.9.0-linux-armv6l.tar.gz
+sleep 10
+echo ""
+echo "unzipping..."
+tar -xzf node-v8.9.0-linux-armv6l.tar.gz
+sleep 10
+echo ""
+echo "Installing..."
+cd node-v6.11.1-linux-armv6l/
+sudo cp -R * /usr/local/
+echo "----\nVersion Info: Node, npm"
+node -v
+npm -v
+echo ""
+echo "Node/npm installed successfully!"
+echo ""
+echo ""
+
 echo "Installing foreverjs"
 
 sudo npm install forever -g
@@ -58,7 +78,12 @@ echo "Installing Python dependencies"
 echo ""
 echo "Installing Pillow"
 pip install Pillow
-
-
 echo ""
+
+echo "Installing Dotenv"
+sudo npm install dotenv
+echo ""
+echo "Dotenv Installed!"
+
+
 echo "Installed all packages"
