@@ -8,4 +8,4 @@ Bot that monitors Discord chatroom and replies to questions by going to various 
 2. Install required dependencies by running the dependencies.sh file
 3. To reboot pi daily, edit by running `sudo crontab -e` and using this cron format to reboot at a specific time: `0 4 * * * /sbin/shutdown -r now`
 4. To start a script at boot, edit the `autostart` file in `~/.config/lxsession/.../autostart` add a new line with `@bash /path/to/script.sh`
-4a. For Raspbian lite, move script to `/etc/init.d/` and use: `sudo update-rc.d /etc/init.d/nameofscript.sh defaults` to make it run at startup
+  a. For Raspbian lite, move script to `/etc/init.d/` and use: `sudo update-rc.d /etc/init.d/nameofscript.sh defaults` to make it run at startup
