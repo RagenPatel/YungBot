@@ -1,7 +1,7 @@
 import sys
 import os
 import urllib
-import imagesize
+# import imagesize
 import time
 
 filename = sys.argv[1]
@@ -25,8 +25,8 @@ else:
         f.close
         time.sleep(10)
 
-    width, height = imagesize.get(filepath)
-    print "image dimensions are",width, "x", height
+#    width, height = imagesize.get(filepath)
+#    print "image dimensions are",width, "x", height
 
 #    if width > 40 or height > 40:
 #        print "Incorrect dimensions! Make sure the image is smaller than 40x40 pixels"
