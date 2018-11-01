@@ -3,6 +3,7 @@ var request = require("request");
 var async = require("async.js");
 var emotes = require("./classes/emotes.js");
 const spawn = require("child_process").spawn;
+const { BitlyClient } = require('bitly');
 
 require('dotenv').config();
 
@@ -34,6 +35,9 @@ fs.readFile('APIs.txt', 'utf8', function (err,data) {
 var discordTok = process.env.DISCORD_API_TOKEN;
 var api_key = process.env.RIOT_API;
 var champ_key = process.env.CHAMP_API;
+var bitly_key = process.env.BITLY_API;
+
+const bitly = new BitlyClient(bitly_key, {});
 
 
 //======================================================================================================================
@@ -84,7 +88,7 @@ bot.on("message", function(message){
 
     function help(){
         message.channel.send("Current commands: ?addemote emotename url (use remove instead of url to remove an emote), dlift, na, !**summonerName**," +
-            " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game)");    }
+            " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game), !bitly <link>");    }
 
     function summonerInfo(input, retStuff) {
         console.log(input.substr(1));
@@ -260,14 +264,21 @@ bot.on("message", function(message){
     }
 
     if(input.charAt(0)=='!') {
-        if(input.indexOf("!lol")>-1){
-            console.log("called gravebot");
-        }else if(input.indexOf("!help")==0){
+        if(input.indexOf("!help")==0){
             console.log("called help command");
             help();
-        }else if (input.length == 1) {
-            message.channel.send(" enter a summoner name after the !");
-        }else if (input.indexOf(" ") >= 0) {
+        } else if(input.indexOf("!bitly") == 0) {
+            var input_arr = input.split(" ");
+            var url = input_arr[1];
+
+            bitly.shorten(url)
+            .then(function(result) {
+                message.channel.send(result['url']);
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+        } else if (input.indexOf(" ") >= 0 && input.indexOf("!bitly") != 0) {
             message.channel.send("Invalid format. Make sure there aint no spaces in der");
         } else {
             summonerInfo(input, false);
