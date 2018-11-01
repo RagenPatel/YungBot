@@ -88,7 +88,7 @@ bot.on("message", function(message){
 
     function help(){
         message.channel.send("Current commands: ?addemote emotename url (use remove instead of url to remove an emote), dlift, na, !**summonerName**," +
-            " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game)");    }
+            " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game), !bitly <link>");    }
 
     function summonerInfo(input, retStuff) {
         console.log(input.substr(1));
