@@ -9,6 +9,7 @@
     "bitly": "^5.0.12",
     "discord.js": "^11.3.2",
     "dotenv": "^4.0.0",
+    "forever": "^0.15.3",
     "google-url": "^0.0.4",
     "googleapis": "^28.1.0",
     "python-shell": "^0.5.0",
