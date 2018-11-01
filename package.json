@@ -6,7 +6,7 @@
   "dependencies": {
     "async": "^2.6.0",
     "async.js": "^0.9.5",
-    "bitly": "^5.0.12",
+    "bitly": "^6.0.8",
     "discord.js": "^11.3.2",
     "dotenv": "^4.0.0",
     "google-url": "^0.0.4",
