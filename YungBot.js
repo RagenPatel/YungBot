@@ -1,8 +1,8 @@
 var discord = require("discord.js");
 var request = require("request");
-var async = require("async.js");
 var emotes = require("./classes/emotes.js");
 var sentimentAnalysis = require("./classes/sentimentAnalysis.js");
+var emojis = require('./classes/addEmojis.js');
 const spawn = require("child_process").spawn;
 const { BitlyClient } = require('bitly');
 
@@ -85,11 +85,15 @@ bot.on("message", function(message){
         }
     }
 
+    if (input.indexOf("?addemoji") == 0) {
+        emojis.addEmojis(input, message);
+    }
+
     //FUNCTIONS
 
     function help(){
         message.channel.send("Current commands: ?addemote emotename url (use remove instead of url to remove an emote), dlift, na, !**summonerName**," +
-            " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game), !bitly <link>");    }
+            " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game), !bitly <link>, ?addemoji url name");    }
 
     function summonerInfo(input, retStuff) {
         console.log(input.substr(1));
@@ -187,6 +191,10 @@ bot.on("message", function(message){
 
     if(input.includes("c9") || input.includes("na") || input.includes("sneaky")) {
         sentimentAnalysis.sentiment(input, message);
+    }
+
+    if(input.indexOf("emojis") == 0) {
+        emojis.addEmojis(input, message);
     }
 
 
