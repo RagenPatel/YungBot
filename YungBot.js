@@ -2,6 +2,7 @@ var discord = require("discord.js");
 var request = require("request");
 var async = require("async.js");
 var emotes = require("./classes/emotes.js");
+var sentimentAnalysis = require("./classes/sentimentAnalysis.js");
 const spawn = require("child_process").spawn;
 const { BitlyClient } = require('bitly');
 
@@ -181,6 +182,11 @@ bot.on("message", function(message){
       if(randNum < 40) {
         message.channel.send("LETS GO NA Poggers");
       }
+    }
+
+
+    if(input.includes("c9") || input.includes("na") || input.includes("sneaky")) {
+        sentimentAnalysis.sentiment(input, message);
     }
 
 
