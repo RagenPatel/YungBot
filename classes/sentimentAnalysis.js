@@ -20,13 +20,13 @@ exports.sentiment = async function(input, message) {
     console.log(outlook);
     
 
-    if (outlook['score'] > 0) {
+    if (outlook['score'] > 1) {
         // Delete a message
         message.delete()
         .catch(console.error);
         
         message.channel.send("? 8)");
-    } else {
+    } else if (outlook['score'] < -1) {
         message.react('😂')
         .catch(console.error);
 
