@@ -79,7 +79,7 @@ const kayn = Kayn(api_key)()
 
                             embed = embed
                             .setTitle("Game Time")
-                            .setColor("#9eff49")
+                            .setColor(color)
                             .addField("Name", sName)
                             .addField("Time (Mins)", timeMin)
                             message.channel.send(embed);
