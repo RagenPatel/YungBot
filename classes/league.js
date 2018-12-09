@@ -7,6 +7,10 @@
 var { RichEmbed } = require("discord.js");
 var request = require("request");
 var db = require('./db/postgresDB.js');
+var moment = require("moment");
+var momentDurationFormatSetup = require("moment-duration-format");
+momentDurationFormatSetup(moment);
+
 require('dotenv').config();
 const { Kayn, REGIONS } = require('kayn')
 
@@ -61,29 +65,24 @@ const kayn = Kayn(api_key)()
                 .then(json => {
                     if (json['gameid'] != "") {
                         var timeSec = json['gameLength'];
-                        var timeMin = timeSec / 60 + 4;
-                        if (isNaN(timeMin)) {
-                            embed = embed
-                            .setTitle("Error")
-                            .addField("Time", timeMin)
-                            message.channel.send(embed);
+                        var color = ""
+                        if (timeSec < 600) {
+                            color = "#9eff49"
+                        } else if (timeSec < 1500) {
+                            color = "#e8be17"
                         } else {
-                            var color = ""
-                            if (timeMin < 10) {
-                                color = "#9eff49"
-                            } else if (timeMin < 25) {
-                                color = "#e8be17"
-                            } else {
-                                color = "#af3221"
-                            }
-
-                            embed = embed
-                            .setTitle("Game Time")
-                            .setColor(color)
-                            .addField("Name", sName)
-                            .addField("Time (Mins)", timeMin)
-                            message.channel.send(embed);
+                            color = "#af3221"
                         }
+
+                        var timeMin = json['gameLength'] + 180
+                        var timeMin = moment.duration(timeMin, "seconds").format("m [minutes], s [seconds]");
+                        embed = embed
+                        .setTitle("Game Time")
+                        .setColor(color)
+                        .addField("Name", sName)
+                        .addField("Time (Mins)", timeMin)
+                        message.channel.send(embed);
+                        
                     }
                 })
                 .catch(error => {
