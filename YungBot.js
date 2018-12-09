@@ -1,4 +1,4 @@
-var discord = require("discord.js");
+var { Client, RichEmbed } = require("discord.js");
 var request = require("request");
 var emotes = require("./classes/emotes.js");
 var sentimentAnalysis = require("./classes/sentimentAnalysis.js");
@@ -7,6 +7,7 @@ var league = require('./classes/league.js');
 var db = require('./classes/db/postgresDB.js');
 const spawn = require("child_process").spawn;
 const { BitlyClient } = require('bitly');
+const { Kayn, REGIONS } = require('kayn')
 
 require('dotenv').config();
 
@@ -40,6 +41,7 @@ var api_key = process.env.RIOT_API;
 var bitly_key = process.env.BITLY_API;
 
 const bitly = new BitlyClient(bitly_key, {});
+const kayn = Kayn(api_key)()
 
 
 //======================================================================================================================
@@ -66,7 +68,7 @@ request(URL, function(err, response, body){
 var region = 'na';
 var data = {};
 
-var bot = new discord.Client();
+var bot = new Client();
 
 
 //Start of bot
@@ -101,27 +103,28 @@ bot.on("message", function(message){
         console.log(input.substr(1));
         var name = input.substr(1);
 
-        var URL = 'https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + name + '?api_key=' + api_key;
-        request(URL, function (err, response, body) {
-            if (!err && response.statusCode == 200) {
-                var json = JSON.parse(body);
-                console.log(json);
-                var sName = json['name'];
-                var sID = json['id'];
-                var sLvl = json['summonerLevel'];
+        // Get summoner by name, get data and output
+        kayn.Summoner.by.name(name)
+        .then(summoner => {
+            var sName = summoner['name'];
+            var sID = summoner['id'];
+            var sLvl = summoner['summonerLevel'];
 
-                if(retStuff == true) {
-                    return sID;
-                }
-
-                var output = "\n`Name: " + sName + "`\n" +
-                    "`ID: " + sID + "`\n" +
-                    "`Level: " + sLvl + "`";
-                message.channel.send(output);
-            } else {
-                console.log(err);
+            if(retStuff == true) {
+                return sID;
             }
-        });
+
+            const embed = new RichEmbed()
+            .setTitle('Summoner Info')
+            .setColor("#45bf18")
+            .addField("Name", sName)
+            .addField("ID", sID)
+            .addField("Level", sLvl)
+            .setURL("http://na.op.gg/summoner/userName=" + sName)
+
+            message.channel.send(embed);
+        })
+        .catch(error => console.error(error))
     }
 
     //test second .js file
@@ -132,15 +135,6 @@ bot.on("message", function(message){
     if (checkEmote != false) {
         message.channel.send({files: ['./emotesImages/'+checkEmote+'.png']});
     }
-
-    // TESTING OUT IF EXTRA FILE IS NECESSARY
-    // if(checkEmote == false) {
-    //     console.log("no emote");
-    // } else if(checkEmote == true) {
-    //     message.channel.send({files: ['./emotesImages/'+input+'.png']});
-    // } else {
-    //     message.channel.send({files: ['./emotesImages/'+checkEmote+'.png']});
-    // }
 
 
 
@@ -191,7 +185,7 @@ bot.on("message", function(message){
     }
 
 
-    if(message.author.id != '197948432961241089' && (input.includes("c9") || input.includes("na") || input.includes("sneaky"))) {
+    if((input.includes("c9") || input.includes("na") || input.includes("sneaky"))) {
         sentimentAnalysis.sentiment(input, message);
     }
 
@@ -199,12 +193,12 @@ bot.on("message", function(message){
         emojis.addEmojis(input, message);
     }
 
-    if (input.indexOf('?updatedb') == 0) {
+    if (message.author.id != '197948432961241089' && input.indexOf('?updatedb') == 0) {
         db.updateChampions();
         db.updateItems();
     }
 
-    if (input == '!createtable') {
+    if (message.author.id != '197948432961241089' && input == '!createtable') {
         console.log("CREATED TABLE ~~~~~~~~~~~~~~~~")
         db.createTable();
     }
@@ -220,36 +214,8 @@ bot.on("message", function(message){
     //IMPLEMENT GETTING CUSTOM TIMES FOR ANY PERSON.. MAYBE EVEN REGIONS
     //get ongoing game data. i.e current game length
     if(input.indexOf("?ingame") == 0){
-        league.ingame(input, message);
-        message.channel.send({embed: {
-            color: 3447003,
-            author: {
-              name: message.client.user.username,
-              icon_url: message.client.user.avatarURL
-            },
-            title: "This is an embed",
-            url: "http://google.com",
-            description: "This is a test embed to showcase what they look like and what they can do.",
-            fields: [{
-                name: "Fields",
-                value: "They can have different fields with small headlines."
-              },
-              {
-                name: "Masked links",
-                value: "You can put [masked links](http://google.com) inside of rich embeds."
-              },
-              {
-                name: "Markdown",
-                value: "You can put all the *usual* **__Markdown__** inside of them."
-              }
-            ],
-            timestamp: new Date(),
-            footer: {
-              icon_url: message.client.user.avatarURL,
-              text: "© Example"
-            }
-          }
-        });
+        const embed = new RichEmbed()
+        league.ingame(input, message, embed);
     }
 
     if (input.charAt(0) == '~' && input.indexOf("ingame")==1){

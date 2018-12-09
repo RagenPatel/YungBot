@@ -20,7 +20,7 @@ exports.sentiment = async function(input, message) {
     console.log(outlook);
     
 
-    if (outlook['score'] > 1) {
+    if (message.author.id != '197948432961241089' && outlook['score'] > 1) {
         // Delete a message
         message.delete()
         .catch(console.error);

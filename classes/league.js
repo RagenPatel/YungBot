@@ -4,13 +4,17 @@
  * class utilizes the postgresDB class to query the database and
  * get relevant information regarding champion/item etc.
  */
+var { RichEmbed } = require("discord.js");
 var request = require("request");
 var db = require('./db/postgresDB.js');
 require('dotenv').config();
+const { Kayn, REGIONS } = require('kayn')
 
 var api_key = process.env.RIOT_API;
 var champ_api = process.env.CHAMP_API;
 const roles = {adc: "DUO_CARRY", support: "DUO_SUPPORT", top: "TOP", mid: "MIDDLE", jungle: "JUNGLE"}
+
+const kayn = Kayn(api_key)()
 
 
  module.exports = {
@@ -30,7 +34,7 @@ const roles = {adc: "DUO_CARRY", support: "DUO_SUPPORT", top: "TOP", mid: "MIDDL
                     }
                     return 0;
                 });
-                console.log("champGGMatchup: " + json);
+                // console.log(json);
                 return json;
             } else {
                 console.log("CHAMPGG ERROR")
@@ -40,62 +44,87 @@ const roles = {adc: "DUO_CARRY", support: "DUO_SUPPORT", top: "TOP", mid: "MIDDL
 
     },
 
-    ingame : function(input, message) {
+    ingame : function(input, message, embed) {
     
         // Check if the GUI in the next space is in game. Username = after the ' '
         if(input.length > 7 && input.charAt(7) == ' ') {
             var checkName = input.substr(8);
             var name = checkName.trim();
     
-            var URL = 'https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + name + '?api_key=' + api_key;
-             request(URL, function (err, response, body) {
-                if (!err && response.statusCode == 200) {
-                    var json =  JSON.parse(body);
-                    var sName = json['name'];
-                    var sID = json['id'];
-                    var sLvl = json['summonerLevel'];
-                    console.log("NAME: " + sName);
-    
-                    var URL = "https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/" + sID + "?api_key=" + api_key;
-                    request(URL, function (err, response, body) {
-                        var json = JSON.parse(body);
-                        if (json['gameid'] != "") {
-                            var timeSec = json['gameLength'];
-                            var timeMin = timeSec / 60 + 4;
-                            if (isNaN(timeMin)) {
-                                message.channel.send(sName + " is not in game.");
-                            } else {
-                                message.channel.send(sName + " has been in game for " + timeMin + " minutes.");
-                            }
-                        }
-                    });
-                } else {
-                    console.log(err);
-                    console.log(response.statusCode)
-                    message.channel.send("Error retreiving data");
-                }
-            });
-        } else {
-    
-            var URL = "https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/50628556?api_key=" + api_key;
-            request(URL, function (err, response, body) {
-                if (!err && response.statusCode == 200) {
-                    var json = JSON.parse(body);
-                    console.log(json);
+            kayn.Summoner.by.name(name)
+            .then(json => {
+                var sName = json['name'];
+                var sID = json['id'];
+                var sLvl = json['summonerLevel'];
+
+                kayn.CurrentGame.by.summonerID(sID)
+                .then(json => {
                     if (json['gameid'] != "") {
                         var timeSec = json['gameLength'];
                         var timeMin = timeSec / 60 + 4;
                         if (isNaN(timeMin)) {
-                            message.channel.send("This GUIs not in game.");
+                            embed = embed
+                            .setTitle("Error")
+                            message.channel.send(embed);
                         } else {
-                            message.channel.send("This person is in game for " + timeMin + " minutes.");
+                            var color = ""
+                            if (time < 10) {
+                                color = "#9eff49"
+                            } else if (time < 25) {
+                                color = "#e8be17"
+                            } else {
+                                color = "#af3221"
+                            }
+
+                            embed = embed
+                            .setTitle("Game Time")
+                            .setColor("#9eff49")
+                            .addField("Name", sName)
+                            .addField("Time (Mins)", timeMin)
+                            message.channel.send(embed);
                         }
                     }
-                } else {
-                    console.log(err);
-                    message.channel.send("error reaching API")
+                })
+                .catch(error => {
+                    const embed = new RichEmbed()
+                    .setColor("#f95762")
+                    .setTitle("GUI not in game!");
+                    message.channel.send(embed);
+                })
+            })
+            .catch(error => {
+                const embed = new RichEmbed()
+                .setColor("#f95762")
+                .setTitle("GUI not in game!");
+                message.channel.send(embed);
+            })
+        } else {
+    
+            kayn.CurrentGame.by.summonerID(50628556)
+            .then(json => {
+                message.channel.send("TEST")
+                if (json['gameid'] != "") {
+                    var timeSec = json['gameLength'];
+                    var timeMin = timeSec / 60 + 4;
+                    if (isNaN(timeMin)) {
+                        embed = embed
+                        .setTitle("Test")
+                        message.channel.send(embed);
+                    } else {
+                        embed = embed
+                        .setTitle("Test")
+                        .addField("Name", sName)
+                        .addField("Time (Mins)", timeMin)
+                        message.channel.send(embed);
+                    }
                 }
-            });
+            })
+            .catch(error => {
+                const embed = new RichEmbed()
+                .setColor("#f95762")
+                .setTitle("GUI not in game!");
+                message.channel.send(embed);
+            })
         }
     },
 
@@ -127,8 +156,9 @@ const roles = {adc: "DUO_CARRY", support: "DUO_SUPPORT", top: "TOP", mid: "MIDDL
             .catch(e => console.error(e));
     
         console.log("LEAGUE.JS: ~~~~~~~~~~~~~~~ \n " + champDetails[0][1]['key'])
-        champData = await module.exports.champGGMatchup(champDetails[0][1]['key'], role)
-        // console.log(champData)
+        var champData = await module.exports.champGGMatchup(champDetails[0][1]['key'], role)
+        console.log("Outside")
+        console.log(champData)
 
         for (var champ in champData) {
             console.log("for loop")

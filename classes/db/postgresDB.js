@@ -6,7 +6,7 @@ module.exports = {
         const { Client } = require('pg')
         const client = new Client()
 
-        var URL = "http://ddragon.leagueoflegends.com/cdn/8.22.1/data/en_US/champion.json"
+        var URL = "http://ddragon.leagueoflegends.com/cdn/8.24.1/data/en_US/champion.json"
         await request(URL, async function(err, response, body) {
             if (!err && response.statusCode == 200) {
                 var json = JSON.parse(body);
@@ -37,7 +37,7 @@ module.exports = {
         const { Client } = require('pg')
         const client = new Client()
 
-        var URL = "http://ddragon.leagueoflegends.com/cdn/8.22.1/data/en_US/item.json"
+        var URL = "http://ddragon.leagueoflegends.com/cdn/8.24.1/data/en_US/item.json"
         await request(URL, async function(err, response, body) {
             if (!err && response.statusCode == 200) {
                 var json = JSON.parse(body)
