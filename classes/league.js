@@ -52,10 +52,10 @@ const kayn = Kayn(api_key)()
             var name = checkName.trim();
     
             kayn.Summoner.by.name(name)
-            .then(json => {
-                var sName = json['name'];
-                var sID = json['id'];
-                var sLvl = json['summonerLevel'];
+            .then(summoner => {
+                var sName = summoner['name'];
+                var sID = summoner['id'];
+                var sLvl = summoner['summonerLevel'];
 
                 kayn.CurrentGame.by.summonerID(sID)
                 .then(json => {
@@ -65,12 +65,13 @@ const kayn = Kayn(api_key)()
                         if (isNaN(timeMin)) {
                             embed = embed
                             .setTitle("Error")
+                            .addField("Time", timeMin)
                             message.channel.send(embed);
                         } else {
                             var color = ""
-                            if (time < 10) {
+                            if (timeMin < 10) {
                                 color = "#9eff49"
-                            } else if (time < 25) {
+                            } else if (timeMin < 25) {
                                 color = "#e8be17"
                             } else {
                                 color = "#af3221"
