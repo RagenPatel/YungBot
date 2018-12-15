@@ -96,8 +96,17 @@ bot.on("message", function(message){
     //FUNCTIONS
 
     function help(){
-        message.channel.send("Current commands: ?addemote emotename url (use remove instead of url to remove an emote), dlift, na, !**summonerName**," +
-            " #region *REGION* (i.e. KR, NA, EUW, EUNE ...), #getregion, ?ingame (<- to check if priyams in game), !bitly <link>, ?addemoji url name");    }
+        const embed = new RichEmbed()
+            .setTitle('Commands')
+            .setColor("#45bf18")
+            .addField("?addemote emotename url/remove", "used to add an emove via the url or remove the emote")
+            .addField("!summonerName", "Get League user info")
+            .addField("?ingame summonerName", "Get ingame time for a user")
+            .addField("!bitly <link>", "shorten a url")
+            .addField("?addemoji url name", "adds emote to discord emojis list (native)")
+            .addField("?emotes", "Gets a list of all the current available emotes")
+        message.channel.send(embed);    
+    }
 
     function summonerInfo(input, retStuff) {
         console.log(input.substr(1));
@@ -139,7 +148,7 @@ bot.on("message", function(message){
 
 
     //help command
-    if(input == "--h"){
+    if(input == "--h" || input == "?help"){
         help();
     }
 
@@ -182,6 +191,26 @@ bot.on("message", function(message){
       if(randNum < 40) {
         message.channel.send("LETS GO NA Poggers");
       }
+    }
+
+    if(input.indexOf("?emote") == 0) {
+        var path = './emotesImages';
+ 
+        fs.readdir(path, function(err, items) {
+            console.log(items);
+            var emoteList = ""
+            const embed = new RichEmbed();
+
+            for (var i=0; i<items.length; i++) {
+                if (items[i].includes(".png")) {
+                    emoteList += items[i].replace(".png", "") + "\n";
+                }
+            }
+    
+            message.channel.send(embed
+                .setColor("#31a9c6")
+                .addField("Emote List", emoteList));
+        });
     }
 
 
