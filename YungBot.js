@@ -99,7 +99,7 @@ bot.on("message", function(message){
         const embed = new RichEmbed()
             .setTitle('Commands')
             .setColor("#45bf18")
-            .addField("?addemote emotename url/remove", "used to add an emove via the url or remove the emote")
+            .addField("?addemote emotename url/remove", "used to add an emote via the url or remove the emote")
             .addField("!summonerName", "Get League user info")
             .addField("?ingame summonerName", "Get ingame time for a user")
             .addField("!bitly <link>", "shorten a url")
