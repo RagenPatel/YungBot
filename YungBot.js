@@ -209,7 +209,8 @@ bot.on("message", function(message){
     
             message.channel.send(embed
                 .setColor("#31a9c6")
-                .addField("Emote List", emoteList));
+                .addField("Emote List", emoteList))
+                .catch(console.error);
         });
     }
 
@@ -223,11 +224,12 @@ bot.on("message", function(message){
     }
 
     if (message.author.id != '197948432961241089' && input.indexOf('?updatedb') == 0) {
+        console.log("updating database!")
         db.updateChampions();
         db.updateItems();
     }
 
-    if (message.author.id != '197948432961241089' && input == '!createtable') {
+    if (message.author.id != '197948432961241089' && input == '?createtable') {
         console.log("CREATED TABLE ~~~~~~~~~~~~~~~~")
         db.createTable();
     }
