@@ -45,7 +45,7 @@ module.exports = {
                 for (var item in json['data']) {
 
                     var item_data = JSON.stringify(json['data'][item])
-                    var sql_query = 'INSERT INTO champions("name", "data") SELECT \'' + item +'\', \'' + item_data + '\' WHERE NOT EXISTS (SELECT 1 FROM champions WHERE "name"=\''+ item +'\');'
+                    var sql_query = 'INSERT INTO items("name", "data") SELECT \'' + item +'\', \'' + item_data + '\' WHERE NOT EXISTS (SELECT 1 FROM items WHERE "name"=\''+ item +'\');'
 
                     // const query = {
                     //     text: 'INSERT INTO items(name, data) VALUES($1, $2)',
