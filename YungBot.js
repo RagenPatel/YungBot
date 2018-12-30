@@ -100,9 +100,9 @@ bot.on("message", function(message){
             .setTitle('Commands')
             .setColor("#45bf18")
             .addField("?addemote emotename url/remove", "used to add an emote via the url or remove the emote")
-            .addField("!summonerName", "Get League user info")
+            .addField("~summonerName", "Get League user info")
             .addField("?ingame summonerName", "Get ingame time for a user")
-            .addField("!bitly <link>", "shorten a url")
+            .addField("?bitly <link>", "shorten a url")
             .addField("?addemoji url name", "adds emote to discord emojis list (native)")
             .addField("?emotes", "Gets a list of all the current available emotes")
         message.channel.send(embed);    
@@ -133,7 +133,10 @@ bot.on("message", function(message){
 
             message.channel.send(embed);
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+            message.channel.send("Something is not right 🤔")
+            console.error(error)
+        })
     }
 
     //test second .js file
@@ -148,9 +151,9 @@ bot.on("message", function(message){
 
 
     //help command
-    if(input == "--h" || input == "?help"){
-        help();
-    }
+    // if(input == "--h" || input == "?help"){
+    //     help();
+    // }
 
     if(input.indexOf("#region") == 0){
         var arr = input.split(" ");
@@ -259,26 +262,27 @@ bot.on("message", function(message){
         }
     }
 
-    if(input.charAt(0)=='!') {
-        if(input.indexOf("!help")==0){
-            console.log("called help command");
-            help();
-        } else if(input.indexOf("!bitly") == 0) {
-            var input_arr = input.split(" ");
-            var url = input_arr[1];
+    if(input.charAt(0) == '~') {
+        summonerInfo(input, false);
+    }
 
-            bitly.shorten(url)
-            .then(function(result) {
-                message.channel.send(result['url']);
-            })
-            .catch(function(error) {
-                console.error(error);
-            });
-        } else if (input.indexOf(" ") >= 0 && input.indexOf("!bitly") != 0) {
-            message.channel.send("Invalid format. Make sure there aint no spaces in der");
-        } else {
-            summonerInfo(input, false);
-        }
+    if(input.indexOf("?bitly") == 0) {
+        var input_arr = input.split(" ");
+        var url = input_arr[1];
+
+        bitly.shorten(url)
+        .then(function(result) {
+            message.channel.send(result['url']);
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    }
+
+    // help command
+    if(input.indexOf("!help")==0){
+        console.log("called help command");
+        help();
     }
 
 });
