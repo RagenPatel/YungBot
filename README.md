@@ -1,6 +1,6 @@
 # LeagueDiscord
 
-Bot that monitors Discord chatroom and replies to questions by going to various APIs to retrieve and manipulate data.
+Discord Bot that adds Twitch Emotes to Discord chat messages and replies to questions by going to various APIs to retrieve and manipulate data.
 
 # Setup
 
