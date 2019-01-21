@@ -5,6 +5,8 @@ echo ""
 echo "============================="
 echo ""
 
+sudo apt-get install vim
+
 echo "Installing tmux"
 sudo apt-get install tmux
 echo "Installed!"
@@ -43,10 +45,14 @@ echo "...Installed!"
 echo "npm install..."
 sudo npm install
 
-echo "Installing Python dependencies"
+echo "Installing KappaBot dependencies"
 echo ""
-echo "Installing Pillow"
-pip install Pillow
+cd ~/KappaBot/KappaBot/
+sudo npm install
 echo ""
 
+echo "Installing postgres"
+sudo apt install postgresql libpq-dev postgresql-client postgresql-client-common -y
+echo"DONE!"
+echo"--------------------------"
 echo "Installed all packages"
