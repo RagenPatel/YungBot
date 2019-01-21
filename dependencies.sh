@@ -45,9 +45,8 @@ echo "...Installed!"
 echo "npm install..."
 sudo npm install
 
-cd
-mkdir KappaBot
-cd KappaBot
+mkdir ~/KappaBot
+cd ~/KappaBot
 git clone https://github.com/deeppatel1/KappaBot.git
 
 echo "Installing KappaBot dependencies"
