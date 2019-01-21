@@ -58,6 +58,6 @@ echo ""
 
 echo "Installing postgres"
 sudo apt install postgresql libpq-dev postgresql-client postgresql-client-common -y
-echo"DONE!"
-echo"--------------------------"
+echo "DONE!"
+echo "--------------------------"
 echo "Installed all packages"
