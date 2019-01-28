@@ -2,7 +2,7 @@
 
 Discord Bot that adds Twitch Emotes to Discord chat messages and replies to questions by going to various APIs to retrieve and manipulate data.
 
-# Setup
+### Setup
 
 1. Set up environment variables for discord API token, Riot games API, and ChampionGG API in a .env file at root directory with `export DISCORD_API_TOKEN=*TOKEN HERE*` .. use `RIOT_API` and `CHAMP_API` for the other two keys.
 2. Install required dependencies by running the dependencies.sh file
@@ -15,7 +15,7 @@ Discord Bot that adds Twitch Emotes to Discord chat messages and replies to ques
 
 ----------------
 
-# Transmission Setup
+### Transmission Setup
 
 1. mount external HDD from Readyshare via fstab: `sudo vim /etc/fstab` and add `//##.##.##.##/USB_Storage/ /path/to/directory cifs user,guest,uid=pi,gid=pi,rw,iocharset=utf8 0 0` to the end of the file to connect the HDD to a directory.
 2. To give proper permissions so that Transmission can run without encountering errors, stop the service `sudo service transmission-daemon stop` and then follow:
