@@ -29,31 +29,41 @@ module.exports = {
                 title = title.replace(/['"]+/g, '')
                 // console.log(image)
 
+            var embed = new RichEmbed()
+
             if(data['thumbnail'] != "nsfw") {
                 if (data.hasOwnProperty('post_hint')){
                     if(data['post_hint'].includes("video")) {
-                        const embed = new RichEmbed()
+                        embed = embed
                             .setColor("#5f449e")
                             .setTitle(title)
                             .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
-                            message.channel.send(embed);
                         message.channel.send(image);
                     }else {
-                        const embed = new RichEmbed()
-                        .setColor("#5f449e")
-                        .setTitle(title)
-                        .setImage(image)
-                        .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
-                        message.channel.send(embed);
+                        embed = embed
+                            .setColor("#5f449e")
+                            .setTitle(title)
+                            .setImage(image)
+                            .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
                     }
                 }
                  else {
-                    const embed = new RichEmbed()
+                    embed = embed
                         .setColor("#5f449e")
                         .setTitle(title)
                         .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
-                        message.channel.send(embed);
                 }
+
+                for (var i = 0; i < data['comments'].length; i++) {
+                    if (i == 3) {
+                        break;
+                    }
+                    // console.log("loop")
+                    embed = embed.addField(data['comments'][i]['body'], 'Upvotes: ' + data['comments'][i]['score']);
+                }
+
+                message.channel.send(embed);
+
             }
         })
     }
