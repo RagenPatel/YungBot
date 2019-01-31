@@ -5,6 +5,7 @@ var sentimentAnalysis = require("./classes/sentimentAnalysis.js");
 var emojis = require('./classes/addEmojis.js');
 var league = require('./classes/league.js');
 var db = require('./classes/db/postgresDB.js');
+var reddit = require('./classes/ice_reddit.js');
 const spawn = require("child_process").spawn;
 const { BitlyClient } = require('bitly');
 const { Kayn, REGIONS } = require('kayn')
@@ -217,6 +218,9 @@ bot.on("message", function(message){
         });
     }
 
+    if(input.includes("ice_poseidon") && input.includes('reddit.com')) {
+        reddit.dataFromURL(input, message)
+    }
 
     if((input.includes("c9") || input.includes("na") || input.includes("sneaky"))) {
         sentimentAnalysis.sentiment(input, message);
