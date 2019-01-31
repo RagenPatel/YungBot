@@ -23,18 +23,37 @@ module.exports = {
         // Extracting every comment on a thread
         r.getSubmission(id).fetch().then(data => {
             // data = JSON.stringify(data)
-            if(data['thumbnail'] != "nsfw") {
-                var image = JSON.stringify(data['url']);
+            var image = JSON.stringify(data['url']);
                 image = image.replace(/['"]+/g, '')
                 var title = JSON.stringify(data['title']);
                 title = title.replace(/['"]+/g, '')
-                console.log(image)
+                // console.log(image)
 
-                const embed = new RichEmbed()
-                    .setColor("#5f449e")
-                    .setTitle(title)
-                    .setImage(image);
-                    message.channel.send(embed);
+            if(data['thumbnail'] != "nsfw") {
+                if (data.hasOwnProperty('post_hint')){
+                    if(data['post_hint'].includes("video")) {
+                        const embed = new RichEmbed()
+                            .setColor("#5f449e")
+                            .setTitle(title)
+                            .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
+                            message.channel.send(embed);
+                        message.channel.send(image);
+                    }else {
+                        const embed = new RichEmbed()
+                        .setColor("#5f449e")
+                        .setTitle(title)
+                        .setImage(image)
+                        .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
+                        message.channel.send(embed);
+                    }
+                }
+                 else {
+                    const embed = new RichEmbed()
+                        .setColor("#5f449e")
+                        .setTitle(title)
+                        .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
+                        message.channel.send(embed);
+                }
             }
         })
     }
