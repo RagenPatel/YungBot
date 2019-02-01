@@ -15,7 +15,7 @@ module.exports = {
             username: process.env.REDDIT_USER,
             password: process.env.REDDIT_PASSWORD
         });
-
+        reddit_url = url
         url = url.substring(url.indexOf("comments/")+9)
         var id = url.substring(0, url.indexOf("/"))
         // console.log("newURL " + id)
@@ -37,21 +37,18 @@ module.exports = {
                         embed = embed
                             .setColor("#5f449e")
                             .setTitle(title)
-                            .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
                         message.channel.send(image);
                     }else {
                         embed = embed
                             .setColor("#5f449e")
                             .setTitle(title)
                             .setImage(image)
-                            .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
                     }
                 }
                  else {
                     embed = embed
                         .setColor("#5f449e")
                         .setTitle(title)
-                        .addField("Upvote Ratio", data['upvote_ratio']*100.0 + "%");
                 }
 
                 for (var i = 0; i < data['comments'].length; i++) {
@@ -59,9 +56,10 @@ module.exports = {
                         break;
                     }
                     // console.log("loop")
-                    embed = embed.addField(data['comments'][i]['body'], 'Upvotes: ' + data['comments'][i]['score']);
+                    embed = embed.addField(data['comments'][i]['body'], 'Upvotes: ' + data['comments'][i]['score'])
                 }
 
+                embed = embed.setFooter("Upvotes: " + data['score'], "https://pbs.twimg.com/profile_images/1059171583036669953/vBpJzLPD_400x400.jpg");
                 message.channel.send(embed);
 
             }
