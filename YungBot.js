@@ -141,13 +141,14 @@ bot.on("message", function(message){
     }
 
     //test second .js file
-    var checkEmote = false
-    checkEmote = emotes.checkForEmotes(input);
-    console.log("checkEmote local: " + checkEmote);
+    // var checkEmote = false
+    checkEmote = emotes.checkForEmotes(input, message);
 
-    if (checkEmote != false) {
-        message.channel.send({files: ['./emotesImages/'+checkEmote+'.png']});
-    }
+    // if(checkEmote[1] == true) {
+    //     console.log()
+    // } else if (checkEmote[0] != false) {
+    //     message.channel.send({files: ['./emotesImages/'+checkEmote+'.png']});
+    // }
 
 
 
@@ -218,7 +219,7 @@ bot.on("message", function(message){
         });
     }
 
-    if(input.includes("ice_poseidon") && input.includes('reddit.com')) {
+    if(input.includes("Ice_Poseidon") && input.includes('reddit.com')) {
         reddit.dataFromURL(input, message)
     }
 
@@ -230,16 +231,16 @@ bot.on("message", function(message){
         emojis.addEmojis(input, message);
     }
 
-    if (message.author.id != '197948432961241089' && input.indexOf('?updatedb') == 0) {
-        console.log("updating database!")
-        db.updateChampions();
-        db.updateItems();
-    }
+    // if (message.author.id != '197948432961241089' && input.indexOf('?updatedb') == 0) {
+    //     console.log("updating database!")
+    //     db.updateChampions();
+    //     db.updateItems();
+    // }
 
-    if (message.author.id != '197948432961241089' && input == '?createtable') {
-        console.log("CREATED TABLE ~~~~~~~~~~~~~~~~")
-        db.createTable();
-    }
+    // if (message.author.id != '197948432961241089' && input == '?createtable') {
+    //     console.log("CREATED TABLE ~~~~~~~~~~~~~~~~")
+    //     db.createTable();
+    // }
 
     if (input.indexOf("checkID: ") == 0) {
         league.checkStats(input, message);
@@ -288,6 +289,11 @@ bot.on("message", function(message){
         console.log("called help command");
         help();
     }
+
+    // Sending image from url
+    // if(input.indexOf('test')==0) {
+    //     message.channel.send("", {files: ['https://cdn.frankerfacez.com/7390d699a3362a0f5a7fe4ca3c643b24.PNG']})
+    // }
 
 });
 
