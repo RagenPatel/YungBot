@@ -219,7 +219,7 @@ bot.on("message", function(message){
         });
     }
 
-    if(input.includes("ice_poseidon") && input.includes('reddit.com')) {
+    if(input.includes("Ice_Poseidon") && input.includes('reddit.com')) {
         reddit.dataFromURL(input, message)
     }
 
