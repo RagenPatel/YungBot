@@ -9,14 +9,14 @@ env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
 def upload_to_db(cursor, connection):
-    url = "https://api.frankerfacez.com/v1/emoticons"
+    url = "https://api.frankerfacez.com/v1/emoticons?per_page=200&sort=count-desc"
     resp = requests.get(url)
     pages = resp.json()['_pages']
-    page = 2661
+    page = 1
 
     while page <= pages:
         while True:
-            resp = requests.get(url+"?page=" + str(page))
+            resp = requests.get(url+"&page=" + str(page))
             print(resp.status_code)
             if resp.status_code == 200:
                 break
@@ -28,7 +28,7 @@ def upload_to_db(cursor, connection):
         for emote in data['emoticons']:
             usage = emote['usage_count']
 
-            if usage > 1000:
+            if usage > 9000:
                 id = emote['id']
                 name = emote['name']
                 image = "https:" + emote['urls']['1']               
@@ -62,6 +62,25 @@ def upload_greek_emote(cursor, connection):
             print ("Error while INSERT TO table", error)
 
     
+def upload_t1_emote(cursor, connection):
+    url = "https://api.frankerfacez.com/v1/room/loltyler1"
+    resp = requests.get(url)
+    print(resp.status_code)
+    data = resp.json()
+
+    for emote in data['sets']['160507']['emoticons']:
+        print(emote)
+        usage = 1000
+        id = emote['id']
+        name = emote['name']
+        image = "https:" + emote['urls']['1']               
+        try:
+            query = 'INSERT INTO emotes (id, name, url, usage) SELECT \'%d\', \'%s\', \'%s\', \'%d\' WHERE NOT EXISTS (SELECT 1 FROM emotes WHERE name=\'%s\');' % (id, name, image, usage, name)
+            print(query)
+            cursor.execute(query)
+            connection.commit()
+        except (Exception, psycopg2.DatabaseError) as error :
+            print ("Error while INSERT TO table", error)
 
 
 
@@ -79,8 +98,9 @@ try:
     record = cursor.fetchone()
     print("You are connected to - ", record,"\n")
     
-    # upload_to_db(cursor, connection)
-    upload_greek_emote(cursor, connection)
+    upload_to_db(cursor, connection)
+    # upload_greek_emote(cursor, connection)
+    # upload_t1_emote(cursor, connection)
 
     
 
