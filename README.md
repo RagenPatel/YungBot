@@ -11,6 +11,8 @@ Discord Bot that adds Twitch Emotes to Discord chat messages and replies to ques
 5. For Raspbian lite, open to `sudo vim /etc/rc.local` and add: `su pi -c 'bash /pathto/script.sh &'` to make it run at startup (`&` makes it so the process runs in the background)
 6. Set up postgres from `https://opensource.com/article/17/10/set-postgres-database-your-raspberry-pi`
 7. autostart postgresql at boot `sudo update-rc.d postgresql enable`
+8. To connect external HDD to a directory, use: `/dev/sda1       /path/to/dir       ntfs-3g async,uid=*USER HERE*,gid=*USER HERE*,umask=000,defaults,sync,auto,nosuid,rw,nouser 0 0`
+    1. Need to install `ntfs-3g` for this to work
 
 
 ----------------
