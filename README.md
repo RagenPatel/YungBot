@@ -37,3 +37,9 @@ Discord Bot that adds Twitch Emotes to Discord chat messages and replies to ques
     sudo chown -R pi:pi /home/pi/.config/transmission-daemon/
     ```
     6. start service `sudo service transmission-daemon start`
+    
+------------
+
+### Pihole Setup
+
+1. Ignore localhost : https://docs.pi-hole.net/ftldns/configfile/
