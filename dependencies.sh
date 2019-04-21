@@ -6,33 +6,38 @@ echo "============================="
 echo ""
 
 echo "Installing tmux"
-sudo apt-get install tmux
+sudo apt-get install tmux -y
 echo "Installed!"
 echo ""
 
+echo ""
+echo "Installing ntfs-3g"
+apt-get install ntfs-3g -y
+
 echo "Installing Node/npm"
-echo "------\nDownloading..."
-wget https://nodejs.org/dist/v8.9.0/node-v8.9.0-linux-armv6l.tar.gz
-sleep 10
-echo ""
-echo "unzipping..."
-tar -xzf node-v8.9.0-linux-armv6l.tar.gz
-sleep 10
-echo ""
-echo "Installing..."
-cd node-v8.9.0-linux-armv6l/
-sudo cp -R * /usr/local/
-echo "----\nVersion Info: Node, npm"
-node -v
-npm -v
-echo ""
-echo "Node/npm installed successfully!"
-echo ""
-echo "removing downloaded node files"
+apt-get install nodejs -y
+# echo "------\nDownloading..."
+# wget https://nodejs.org/dist/v8.9.0/node-v8.9.0-linux-armv6l.tar.gz
+# sleep 10
+# echo ""
+# echo "unzipping..."
+# tar -xzf node-v8.9.0-linux-armv6l.tar.gz
+# sleep 10
+# echo ""
+# echo "Installing..."
+# cd node-v8.9.0-linux-armv6l/
+# sudo cp -R * /usr/local/
+# echo "----\nVersion Info: Node, npm"
+# node -v
+# npm -v
+# echo ""
+# echo "Node/npm installed successfully!"
+# echo ""
+# echo "removing downloaded node files"
 
 cd ~/YungBot/LeagueDiscord/
-sudo rm -r node-v8.9.0*
-echo "Files removed"
+# sudo rm -r node-v8.9.0*
+# echo "Files removed"
 
 echo "Installing foreverjs"
 

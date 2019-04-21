@@ -21,11 +21,10 @@ exports.sentiment = async function(input, message) {
     
 
     if (message.author.id != '197948432961241089' && outlook['score'] > 1) {
-        // Delete a message
-        message.delete()
+        message.react('⁇')
         .catch(console.error);
-        
-        message.channel.send("? 8)");
+        message.react('👎')
+        .catch(console.error);
     } else if (outlook['score'] < -1) {
         message.react('😂')
         .catch(console.error);
