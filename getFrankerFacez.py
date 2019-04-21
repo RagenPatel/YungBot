@@ -14,6 +14,8 @@ def upload_to_db(cursor, connection):
     pages = resp.json()['_pages']
     page = 1
 
+    check = False
+
     while page <= pages:
         while True:
             resp = requests.get(url+"&page=" + str(page))
@@ -39,6 +41,11 @@ def upload_to_db(cursor, connection):
                     connection.commit()
                 except (Exception, psycopg2.DatabaseError) as error :
                     print ("Error while INSERT TO table", error)
+            else:
+                check = True
+        
+        if check:
+            break
 
 
 def upload_greek_emote(cursor, connection):
@@ -99,8 +106,8 @@ try:
     print("You are connected to - ", record,"\n")
     
     upload_to_db(cursor, connection)
-    # upload_greek_emote(cursor, connection)
-    # upload_t1_emote(cursor, connection)
+    upload_greek_emote(cursor, connection)
+    upload_t1_emote(cursor, connection)
 
     
 

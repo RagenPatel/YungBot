@@ -223,7 +223,7 @@ bot.on("message", function(message){
         reddit.dataFromURL(input, message)
     }
 
-    if((input.includes("c9") || input.includes("na") || input.includes("sneaky"))) {
+    if((input.includes("c9") || input.includes(" na ") || input.includes("sneaky"))) {
         sentimentAnalysis.sentiment(input, message);
     }
 
