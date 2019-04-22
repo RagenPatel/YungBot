@@ -21,7 +21,7 @@ exports.sentiment = async function(input, message) {
     
 
     if (message.author.id != '197948432961241089' && outlook['score'] > 1) {
-        message.react('⁇')
+        message.react('❓')
         .catch(console.error);
         message.react('👎')
         .catch(console.error);
