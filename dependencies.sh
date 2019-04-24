@@ -63,5 +63,13 @@ echo ""
 echo "Installing postgres"
 sudo apt install postgresql libpq-dev postgresql-client postgresql-client-common -y
 echo "DONE!"
+
+echo "installing samba"
+sudo apt-get update
+ 
+sudo apt-get upgrade
+ 
+sudo apt-get install samba samba-common-bin -y
+
 echo "--------------------------"
 echo "Installed all packages"
