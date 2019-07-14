@@ -113,6 +113,7 @@ bot.on("message", function(message){
             .addField("?addemoji url name", "adds emote to discord emojis list (native)")
             .addField("?emotes", "Gets a list of all the current available emotes")
             .addField("!reboot", "restart server")
+            .addField("?logs", "kappabot logs")
         message.channel.send(embed);    
     }
 
@@ -303,6 +304,10 @@ bot.on("message", function(message){
             .setColor("#45bf18")
         message.channel.send(embed); 
         reboot_bot()
+    }
+
+    if (message.content.startsWith('?logs')) {
+        message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
     }
 
     // Sending image from url
