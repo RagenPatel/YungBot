@@ -12,12 +12,39 @@ sudo apt-get install tmux -y
 echo "Installed!"
 echo ""
 
+echo "Installing NodeJS"
+curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+
+sudo apt-get install -y nodejs
+
+echo ""
+echo "Node installed. Version info"
+node --v
+npm --v
+
+#echo "Installing Node/npm"
+#echo "------\nDownloading..."
+#wget https://nodejs.org/dist/v8.9.0/node-v8.9.0-linux-armv6l.tar.gz
+#echo ""
+#echo "unzipping..."
+#tar -xzf node-v8.9.0-linux-armv6l.tar.gz
+#echo "Installing..."
+#cd node-v8.9.0-linux-armv6l/
+#sudo cp -R * /usr/local/
+#echo "----\nVersion Info: Node, npm"
+#node -v
+#npm -v
+#echo ""
+#echo "Node/npm installed successfully!"
+#echo ""
+#echo "removing downloaded node files"
+
+cd ~/YungBot/LeagueDiscord/
+#sudo rm -r node-v8.9.0*
+#echo "Files removed"
 echo ""
 echo "Installing ntfs-3g"
-apt-get install ntfs-3g -y
-
-echo "Installing Node/npm"
-apt-get install nodejs -y
+apt-get install -y ntfs-3g
 # echo "------\nDownloading..."
 # wget https://nodejs.org/dist/v8.9.0/node-v8.9.0-linux-armv6l.tar.gz
 # sleep 10
@@ -42,7 +69,6 @@ cd ~/YungBot/LeagueDiscord/
 # echo "Files removed"
 
 echo "Installing foreverjs"
-
 sudo npm install forever -g
 
 echo "...Installed!"
