@@ -9,6 +9,8 @@ var reddit = require('./classes/ice_reddit.js');
 const spawn = require("child_process").spawn;
 const { BitlyClient } = require('bitly');
 const { Kayn, REGIONS } = require('kayn')
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 require('dotenv').config();
 
@@ -96,6 +98,10 @@ bot.on("message", function(message){
 
     //FUNCTIONS
 
+    function reboot_bot() {
+        exec('sudo reboot');
+    }
+
     function help(){
         const embed = new RichEmbed()
             .setTitle('Commands')
@@ -106,6 +112,7 @@ bot.on("message", function(message){
             .addField("?bitly <link>", "shorten a url")
             .addField("?addemoji url name", "adds emote to discord emojis list (native)")
             .addField("?emotes", "Gets a list of all the current available emotes")
+            .addField("!reboot", "restart server")
         message.channel.send(embed);    
     }
 
@@ -288,6 +295,14 @@ bot.on("message", function(message){
     if(input.indexOf("!help")==0){
         console.log("called help command");
         help();
+    }
+
+    if(input.indexOf("!reboot") == 0) {
+        const embed = new RichEmbed()
+            .setTitle('Rebooting server')
+            .setColor("#45bf18")
+        message.channel.send(embed); 
+        reboot_bot()
     }
 
     // Sending image from url
