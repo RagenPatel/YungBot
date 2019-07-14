@@ -102,6 +102,10 @@ bot.on("message", function(message){
         exec('sudo reboot');
     }
 
+    function clear_logs() {
+        exec('python /home/pi/YungBot/LeagueDiscord/clean_logs.py');
+    }
+
     function help(){
         const embed = new RichEmbed()
             .setTitle('Commands')
@@ -114,6 +118,7 @@ bot.on("message", function(message){
             .addField("?emotes", "Gets a list of all the current available emotes")
             .addField("!reboot", "restart server")
             .addField("?logs", "kappabot logs")
+            .addField("!clean", "clean logs")
         message.channel.send(embed);    
     }
 
@@ -304,6 +309,16 @@ bot.on("message", function(message){
             .setColor("#45bf18")
         message.channel.send(embed); 
         reboot_bot()
+    }
+
+    if(input.indexOf("!clean") == 0) {
+        const embed = new RichEmbed()
+            .setTitle('Cleaning Logs and rebooting.')
+            .setColor("#45bf18")
+        message.channel.send(embed); 
+        clear_logs()
+        reboot_bot()
+
     }
 
     if (message.content.startsWith('?logs')) {
