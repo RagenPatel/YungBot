@@ -326,19 +326,6 @@ bot.on("message", function(message){
         message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
     }
 
-    if(message.content.startsWith('?redditsub')) {
-        var input_arr = input.split(" ");
-        var subReddit = input_arr[1];
-
-        fs.appendFile('.env', '\nREDDIT_SUBREDDIT='+subReddit, function (err) {
-            if (err) {
-                message.channel.send("Error" + err)
-                throw err;
-            }
-            message.channel.send("Saved!")
-        });    
-    }
-
     // Sending image from url
     // if(input.indexOf('test')==0) {
     //     message.channel.send("", {files: ['https://cdn.frankerfacez.com/7390d699a3362a0f5a7fe4ca3c643b24.PNG']})
