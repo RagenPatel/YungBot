@@ -119,6 +119,7 @@ bot.on("message", function(message){
             .addField("!reboot", "restart server")
             .addField("?logs", "kappabot logs")
             .addField("!clean", "clean logs")
+            .footer("v1.0")
         message.channel.send(embed);    
     }
 
@@ -232,7 +233,7 @@ bot.on("message", function(message){
         });
     }
 
-    if(input.includes("Ice_Poseidon") && input.includes('reddit.com')) {
+    if(input.includes("ice_poseidon") && input.includes('reddit.com')) {
         reddit.dataFromURL(input, message)
     }
 
@@ -323,6 +324,19 @@ bot.on("message", function(message){
 
     if (message.content.startsWith('?logs')) {
         message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
+    }
+
+    if(message.content.startsWith('?redditsub')) {
+        var input_arr = input.split(" ");
+        var subReddit = input_arr[1];
+
+        fs.appendFile('.env', '\nREDDIT_SUBREDDIT='+subReddit, function (err) {
+            if (err) {
+                message.channel.send("Error" + err)
+                throw err;
+            }
+            message.channel.send("Saved!")
+        });    
     }
 
     // Sending image from url
