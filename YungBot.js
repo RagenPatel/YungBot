@@ -119,7 +119,7 @@ bot.on("message", function(message){
             .addField("!reboot", "restart server")
             .addField("?logs", "kappabot logs")
             .addField("!clean", "clean logs")
-            .addField("v1.2")
+            .addField("v1.3")
         message.channel.send(embed);    
     }
 
@@ -330,7 +330,7 @@ bot.on("message", function(message){
         var input_arr = input.split(" ");
         var subReddit = input_arr[1];
 
-         fs.appendFile('.env', '\nREDDIT_KEYWORDS='+subReddit, function (err) {
+         fs.appendFile('.env', ','+subReddit, function (err) {
             if (err) {
                 message.channel.send("Error" + err)
                 throw err;
