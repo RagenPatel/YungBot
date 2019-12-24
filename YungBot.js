@@ -119,7 +119,7 @@ bot.on("message", function(message){
             .addField("!reboot", "restart server")
             .addField("?logs", "kappabot logs")
             .addField("!clean", "clean logs")
-            .addField("v1.1")
+            .addField("v1.2")
         message.channel.send(embed);    
     }
 
@@ -324,6 +324,19 @@ bot.on("message", function(message){
 
     if (message.content.startsWith('?logs')) {
         message.channel.send("kappabot logs", { files: ["/home/pi/.forever/kappabot.log"] });
+    }
+
+    if(message.content.startsWith('?redditsub')) {
+        var input_arr = input.split(" ");
+        var subReddit = input_arr[1];
+
+         fs.appendFile('.env', '\nREDDIT_KEYWORDS='+subReddit, function (err) {
+            if (err) {
+                message.channel.send("Error" + err)
+                throw err;
+            }
+            message.channel.send("Saved!")
+        });    
     }
 
     // Sending image from url
