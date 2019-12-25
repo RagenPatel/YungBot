@@ -73,6 +73,7 @@ var data = {};
 
 var bot = new Client();
 
+reddit.redditCheck(bot, 300000)
 
 //Start of bot
 bot.on("message", function(message){
@@ -119,7 +120,7 @@ bot.on("message", function(message){
             .addField("!reboot", "restart server")
             .addField("?logs", "kappabot logs")
             .addField("!clean", "clean logs")
-            .addField("v1.3")
+            .addField("v1.4")
         message.channel.send(embed);    
     }
 
@@ -336,7 +337,28 @@ bot.on("message", function(message){
                 throw err;
             }
             message.channel.send("Saved!")
-        });    
+        });
+    }
+
+    if(message.content.startsWith('?redditkeys')) {
+        fs.readFile(".env", 'utf8', function (err,data) {
+            const currentKeys = data.split("REDDIT_KEYWORDS=")
+            bot.channels.get("198297756295495681").send(currentKeys[1])
+        });
+    }
+
+    if(message.content.startsWith('?redditdelete')) {
+        var input_arr = input.split(" ");
+        var stringToDelete = input_arr[1];
+
+        fs.readFile(".env", 'utf8', function (err,data) {
+            var formatted = data.replace(","+stringToDelete, '');
+
+            fs.writeFile(".env", formatted, 'utf8', function (err) {
+                if (err) return console.log(err);
+            });
+        });
+
     }
 
     // Sending image from url

@@ -1,6 +1,7 @@
 var { RichEmbed } = require("discord.js");
 var request = require("request");
 var snoowrap = require('snoowrap');
+var fs = require('fs')
 
 
 require('dotenv').config();
@@ -15,54 +16,68 @@ module.exports = {
             username: process.env.REDDIT_USER,
             password: process.env.REDDIT_PASSWORD
         });
-        reddit_url = url
-        url = url.substring(url.indexOf("comments/")+9)
-        var id = url.substring(0, url.indexOf("/"))
-        // console.log("newURL " + id)
-        // var id = 
-        // Extracting every comment on a thread
-        r.getSubmission(id).fetch().then(data => {
-            // data = JSON.stringify(data)
-            var image = JSON.stringify(data['url']);
-                image = image.replace(/['"]+/g, '')
-                var title = JSON.stringify(data['title']);
-                title = title.replace(/['"]+/g, '')
-                // console.log(image)
+    },
 
-            var embed = new RichEmbed()
+    redditCheck : function(clientfordiscord, intervalLength) {
+        setInterval(function () {
 
-            if(data['thumbnail'] != "nsfw") {
-                if (data.hasOwnProperty('post_hint')){
-                    if(data['post_hint'].includes("video")) {
-                        embed = embed
-                            .setColor("#5f449e")
-                            .setTitle(title)
-                        message.channel.send(image);
-                    }else {
-                        embed = embed
-                            .setColor("#5f449e")
-                            .setTitle(title)
-                            .setImage(image)
+            const r = new snoowrap({
+                userAgent: 'reddit-post-on-discord',
+                clientId: process.env.REDDIT_ID,
+                clientSecret: process.env.REDDIT_SECRET,
+                username: process.env.REDDIT_USER,
+                password: process.env.REDDIT_PASSWORD
+            });
+
+            // Reddit check here
+            var redditkeys = process.env.REDDIT_KEYWORDS
+            console.log("redditkeys: " + redditkeys)
+            var splitEqual = redditkeys.split("=")
+            console.log(splitEqual)
+            var splitComma = splitEqual[0].split(",")
+            console.log(splitComma)
+            
+            r.getSubreddit(process.env.REDDIT_SUBREDDIT).getNew().then( posts => {
+                var postsTitles = posts.map(post => post.title)
+                var postsURL = posts.map(post => post.url)
+            
+                var i = 0
+                for(let title of postsTitles) {
+                    var check = false;
+
+                    var fs = require('fs');
+
+                    fs.appendFileSync('redditPosts.txt', "", function (err) {
+                        if (err) throw err;
+                        console.log('Saved!');
+                    });
+
+                    var fileData = fs.readFileSync("redditPosts.txt").toString();
+                    if(fileData.includes(postIDs[i])){
+                        console.log("Check if postIDs exist")
+                        check = true;
+                    }
+
+                    if(check){
+                        continue
+                    }
+                    
+                    for (let keyWords of splitComma) {
+                        if(keyWords == "") {
+                            continue
+                        }
+                        
+                        if (title.indexOf(keyWords)>= 0) {
+                            //Message url here
+                            clientfordiscord.channels.get("198297756295495681").send(postsURL[i])
+                        }
+                        
+                        // console.log(title)
+                        i++;
                     }
                 }
-                 else {
-                    embed = embed
-                        .setColor("#5f449e")
-                        .setTitle(title)
-                }
 
-                for (var i = 0; i < data['comments'].length; i++) {
-                    if (i == 3) {
-                        break;
-                    }
-                    // console.log("loop")
-                    embed = embed.addField(data['comments'][i]['body'], 'Upvotes: ' + data['comments'][i]['score'])
-                }
-
-                embed = embed.setFooter("Upvotes: " + data['score'], "https://pbs.twimg.com/profile_images/1059171583036669953/vBpJzLPD_400x400.jpg");
-                message.channel.send(embed);
-
-            }
-        })
+            })
+        }, intervalLength)
     }
 }
