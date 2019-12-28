@@ -120,7 +120,7 @@ bot.on("message", function(message){
             .addField("!reboot", "restart server")
             .addField("?logs", "kappabot logs")
             .addField("!clean", "clean logs")
-            .addField("Version", "v1.4.1")
+            .addField("Version", "v1.4.2")
         message.channel.send(embed);    
     }
 

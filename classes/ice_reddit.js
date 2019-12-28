@@ -40,6 +40,7 @@ module.exports = {
             r.getSubreddit(process.env.REDDIT_SUBREDDIT).getNew().then( posts => {
                 var postsTitles = posts.map(post => post.title)
                 var postsURL = posts.map(post => post.url)
+                var postIDs = posts.map(post => post.id)
             
                 var i = 0
                 for(let title of postsTitles) {
@@ -50,12 +51,10 @@ module.exports = {
 
                     fs.appendFileSync('redditPosts.txt', "", function (err) {
                         if (err) throw err;
-                        console.log('Saved!');
                     });
 
                     var fileData = fs.readFileSync("redditPosts.txt").toString();
                     if(fileData.includes(postIDs[i])){
-                        console.log("Check if postIDs exist")
                         check = true;
                     }
 
@@ -63,6 +62,10 @@ module.exports = {
                         continue
                     }
                     
+                    fs.appendFileSync('redditPosts.txt', postIDs[i]+"\n", function (err) {
+                        if (err) throw err;
+                    });
+
                     for (let keyWords of splitComma) {
                         if(keyWords == "") {
                             continue
@@ -73,7 +76,6 @@ module.exports = {
                             clientfordiscord.channels.get("198297756295495681").send(postsURL[i])
                         }
                         
-                        // console.log(title)
                         i++;
                     }
                 }
