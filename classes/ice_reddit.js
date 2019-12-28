@@ -45,6 +45,7 @@ module.exports = {
                 for(let title of postsTitles) {
                     var check = false;
 
+                    title = title.toLowerCase();
                     var fs = require('fs');
 
                     fs.appendFileSync('redditPosts.txt', "", function (err) {
