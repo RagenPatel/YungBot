@@ -30,7 +30,7 @@ exports.checkForEmotes = async function(input, message) {
             message.channel.send({files: ['./emotesImages/' + inputArr[word] + '.png']});
             // return (inputArr[word], false)
         } else if (fs.existsSync('./emotesImages/'+inputArr[word]+'.gif')) {
-            message.channel.send('./emotesImages/'+inputArr[word]+'.gif');
+            message.channel.send({files: ['./emotesImages/' + inputArr[word] + '.gif']});
         } else {
             db.checkForEmote(inputArr[word], message);
         }
