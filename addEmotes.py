@@ -1,29 +1,39 @@
 import sys
 import os
 import urllib
+import requests
 # import imagesize
 import time
+
+def get_content_type(url):
+    return requests.head(url).headers['Content-Type']
 
 filename = sys.argv[1]
 url = str(sys.argv[2])
 
-filepath = './emotesImages/'+filename+'.png'
+if url == 'remove':
+    if os.path.isfile('./emotesImages/'+filename+'*'):
+        os.remove('./emotesImages/'+filename+'*')
+    else:
+        exit(0)
+
+if get_content_type(url) == "image/gif":
+    filepath = './emotesImages/'+filename+'.gif'
+else:
+    filepath = './emotesImages/'+filename+'.png'
+    
 exists = os.path.isfile(filepath)
 
-if url == 'remove':
-    if exists:
-        os.remove(filepath)
+if exists:
+    print("File already exists!")
+    sys.stdout.flush()
+    exit
 else:
-    if exists:
-        print "File already exists!"
-        sys.stdout.flush()
-        exit
-    else:
-        f = open(filepath, 'wb')
-        emote = urllib.urlopen(url).read()
-        f.write(emote)
-        f.close
-        time.sleep(10)
+    f = open(filepath, 'wb')
+    emote = urllib.urlopen(url).read()
+    f.write(emote)
+    f.close
+    time.sleep(10)
 
 #    width, height = imagesize.get(filepath)
 #    print "image dimensions are",width, "x", height
