@@ -18,7 +18,15 @@ module.exports = {
             // console.log(r.rows)
             if (r.rows.length > 0) {
                 console.log(r.rows)
-                message.channel.send("", {files: [r.rows[0][2]]});
+                // message.channel.send("", {files: [r.rows[0][2]]});
+                if (r.rows[0][2].indexOf(".png") >= 0 || r.rows[0][2].indexOf(".PNG") >= 0) {
+                    message.channel.send("", {files: [r.rows[0][2]]});
+                } else {
+                    message.channel.send({files: [{
+                        attachment: r.rows[0][2],
+                        name: r.rows[0][1]+'.gif'
+                    }]})
+                }
                 return true;
             } else {
                 return false;
