@@ -1,8 +1,11 @@
 var request = require("request");
+var { Client, RichEmbed } = require("discord.js");
 require('dotenv').config();
 
-module.exports = {
+var successColor = "#6EC54B"
+var deleteColor = "#F14C52"
 
+module.exports = {
     checkForEmote : async function(word, message) {
         console.log("pg: "+ word)
         const { Client } = require('pg')
@@ -35,6 +38,91 @@ module.exports = {
         .catch(err => console.error())
         await client.end()
         return false
+
+    },
+    
+    executeCustomQuery : async function(queryString, message) {
+        const { Client } = require('pg')
+        const client = new Client()
+
+        // var sql_query = 'SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'' + word + '\')'
+        await client.connect();
+        await client.query({
+            rowMode: 'array',
+            text: queryString
+        })
+        .then(() => {
+            // console.log(r.rows)
+            message.channel.send("Success!");
+        })
+        .catch(err => {
+            message.channel.send(console.error())
+        })
+        await client.end()
+        return false
+    },
+
+    deleteEmote : async function(emote, message) {
+
+        const { Client } = require('pg')
+        const client = new Client()
+
+        var sql_query = 'DELETE FROM emotes WHERE LOWER(name)=LOWER(\'' + emote + '\')'
+
+        await client.connect();
+        await client.query({
+            rowMode: 'array',
+            text: sql_query
+        })
+        .then(() => {
+            // console.log(r.rows)
+            const embed = new RichEmbed()
+            .setTitle("Success!")
+            .addField("Removed " + emote + " from database.")
+            .setColor(successColor)
+            message.channel.send(embed); 
+        })
+        .catch(err => {
+            const embed = new RichEmbed()
+            .setTitle("ERROR!")
+            setField(console.error())
+            .setColor(deleteColor)
+            message.channel.send(embed);
+        })
+        await client.end()
+        return false
+
+    },
+
+    addEmoteToDB : async function(word, url, message) {
+        const { Client } = require('pg')
+        const client = new Client()
+
+        var sql_query = 'INSERT into emotes (id, name, url, usage) VALUES (12, \'' + word + '\', \'' + url + '\', 1000)'
+        // var sql_query = 'SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'' + word + '\')'
+        await client.connect();
+        await client.query({
+            rowMode: 'array',
+            text: sql_query
+        })
+        .then(() => {
+            // console.log(r.rows)
+            const embed = new RichEmbed()
+            .setTitle("Success!")
+            .addField("Added " + emote + " from database.")
+            .setColor(successColor)
+            message.channel.send(embed); 
+        })
+        .catch(err => {
+            const embed = new RichEmbed()
+            .setTitle("ERROR!")
+            setField(console.error())
+            .setColor(deleteColor)
+            message.channel.send(embed);
+        })
+        await client.end()
+        return false
+
 
     }
 
