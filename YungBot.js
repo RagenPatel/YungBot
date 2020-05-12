@@ -117,10 +117,12 @@ bot.on("message", function(message){
             .addField("?bitly <link>", "shorten a url")
             .addField("?addemoji url name", "adds emote to discord emojis list (native)")
             .addField("?emotes", "Gets a list of all the current available emotes")
+            .addField("?sqlRemove emoteName", "Remove an emote from the Postgres Database")
             .addField("!reboot", "restart server")
             .addField("?logs", "kappabot logs")
             .addField("!clean", "clean logs")
             .addField("Version", "v1.4.2")
+            .addField("?addtodb <emoteName> <URL>", "Add emote to the DB. To remove from DB, use ?addtodb <emoteName> remove")
         message.channel.send(embed);    
     }
 
@@ -359,6 +361,29 @@ bot.on("message", function(message){
             });
         });
 
+    }
+
+    // MARK: SQL Execution
+    if (message.content.startsWith('!sql')) {
+        var query = message.content.substr(5);
+        db.executeCustomQuery(query, message);
+    }
+
+    // MARK: - Add Emote to Database
+    if (message.content.startsWith('?addtodb')) {
+        var msg = input.split(" ");
+        var word = msg[1];
+        var url = msg[2];
+        if (url.indexOf("http") >= 0) {
+            db.addEmoteToDB(word, url, message);
+        } else if (url.indexOf("remove") == 0) {
+            db.deleteEmote(word, message);
+        } else {
+            const embed = new RichEmbed()
+            .setTitle('Error with URL!')
+            .setColor("#F14C52")
+            message.channel.send(embed); 
+        }
     }
 
     // Sending image from url
