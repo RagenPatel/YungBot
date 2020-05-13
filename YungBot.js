@@ -6,6 +6,8 @@ var emojis = require('./classes/addEmojis.js');
 var league = require('./classes/league.js');
 var db = require('./classes/db/postgresDB.js');
 var reddit = require('./classes/ice_reddit.js');
+var esp32 = require('./classes/IoT/esp32.js');
+
 const spawn = require("child_process").spawn;
 const { BitlyClient } = require('bitly');
 const { Kayn, REGIONS } = require('kayn')
@@ -367,6 +369,11 @@ bot.on("message", function(message){
     if (message.content.startsWith('!sql')) {
         var query = message.content.substr(5);
         db.executeCustomQuery(query, message);
+    }
+
+    if (message.content.startsWith('!getimage') && process.env.SUDO_USER == message.author.id) {
+        console.log("userId: " + message.author.id);
+        esp32.getCapture(bot);
     }
 
     // MARK: - Add Emote to Database
