@@ -11,7 +11,7 @@
     "dotenv": "^4.0.0",
     "forever": "^0.15.3",
     "google-url": "^0.0.4",
-    "googleapis": "^28.1.0",
+    "googleapis": "^39.1.0",
     "kayn": "^0.8.26",
     "moment-duration-format": "^2.3.2",
     "pg": "^7.18.2",
