@@ -6,5 +6,11 @@ exports.addEmojis = async function(input, message) {
     var name = inputArr[2];
 
     guild.createEmoji(url, name)
-    .catch(console.error);
+    .catch(err => {
+        console.log("++++++++++++++++")
+        console.log(url)
+        console.log(name)
+        console.log(err)
+        console.log("++++++++++++++++")
+    });
 }

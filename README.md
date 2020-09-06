@@ -13,6 +13,8 @@ Discord Bot that adds Twitch Emotes to Discord chat messages and replies to ques
 7. autostart postgresql at boot `sudo update-rc.d postgresql enable`
 8. To connect external HDD to a directory, use: `/dev/sda1       /path/to/dir       ntfs-3g async,uid=*USER HERE*,gid=*USER HERE*,umask=000,defaults,sync,auto,nosuid,rw,nouser 0 0`
     1. Need to install `ntfs-3g` for this to work
+    2. Check if you can mount the HDD. Check mount location with `sudo fdisk -l` and then check if you can mount it with `sudo mount /dev/sda1 /path/to/mount/dir` if it works, then do the next step
+    3. Dont need all that ^ just need to set up fstab with `/dev/sda1 	/path/to/mount/dir	ntfs-3g	rw,default	0	0`
 
 
 ----------------
