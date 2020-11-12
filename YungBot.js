@@ -78,10 +78,15 @@ var bot = new Client();
 reddit.redditCheck(bot, 300000)
 
 bot.on('ready', () => {
-    // setInterval( exec('source /home/pi/InventoryChecker/runChecker.sh'); , 60000)
-    setInterval(() => {
+    function checkerRandom() {
+        var min = 30,
+          max = 120;
+        var rand = Math.floor(Math.random() * (max - min + 1) + min); //Generate Random number between 5 - 10
         exec('source /home/pi/InventoryChecker/runChecker.sh')
-    }, 60000);
+        setTimeout(checkerRandom, rand * 1000);
+    }
+    // setInterval( exec('source /home/pi/InventoryChecker/runChecker.sh'); , 60000)
+    checkerRandom()
 })
 
 //Start of bot
