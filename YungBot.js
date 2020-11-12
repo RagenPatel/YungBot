@@ -82,7 +82,7 @@ bot.on('ready', () => {
         var min = 30,
           max = 120;
         var rand = Math.floor(Math.random() * (max - min + 1) + min); //Generate Random number between 5 - 10
-        exec('source /home/pi/InventoryChecker/runChecker.sh')
+        exec('/home/pi/InventoryChecker/runChecker.sh')
         setTimeout(checkerRandom, rand * 1000);
     }
     // setInterval( exec('source /home/pi/InventoryChecker/runChecker.sh'); , 60000)
