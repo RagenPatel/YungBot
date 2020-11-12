@@ -77,6 +77,13 @@ var bot = new Client();
 
 reddit.redditCheck(bot, 300000)
 
+bot.on('ready', () => {
+    // setInterval( exec('source /home/pi/InventoryChecker/runChecker.sh'); , 60000)
+    setInterval(() => {
+        exec('source /home/pi/InventoryChecker/runChecker.sh')
+    }, 60000);
+})
+
 //Start of bot
 bot.on("message", function(message){
     console.log(message.channel.id)
@@ -100,7 +107,6 @@ bot.on("message", function(message){
     }
 
     //FUNCTIONS
-
     function reboot_bot() {
         exec('sudo reboot');
     }
