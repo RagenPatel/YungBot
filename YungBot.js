@@ -77,17 +77,17 @@ var bot = new Client();
 
 reddit.redditCheck(bot, 300000)
 
-bot.on('ready', () => {
-    function checkerRandom() {
-        var min = 60,
-          max = 300;
-        var rand = Math.floor(Math.random() * (max - min + 1) + min); //Generate Random number between 5 - 10
-        exec('/home/pi/InventoryChecker/runChecker.sh')
-        setTimeout(checkerRandom, rand * 1000);
-    }
-    // setInterval( exec('source /home/pi/InventoryChecker/runChecker.sh'); , 60000)
-    checkerRandom()
-})
+// bot.on('ready', () => {
+//     function checkerRandom() {
+//         var min = 60,
+//           max = 300;
+//         var rand = Math.floor(Math.random() * (max - min + 1) + min); //Generate Random number between 5 - 10
+//         exec('/home/pi/InventoryChecker/runChecker.sh')
+//         setTimeout(checkerRandom, rand * 1000);
+//     }
+//     // setInterval( exec('source /home/pi/InventoryChecker/runChecker.sh'); , 60000)
+//     checkerRandom()
+// })
 
 //Start of bot
 bot.on("message", function(message){
