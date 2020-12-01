@@ -52,6 +52,27 @@ module.exports = {
         return false
 
     },
+
+    getTop10UsedEmotes: async function(message) {
+        const { Client } = require('pg')
+        const client = new Client()
+
+        query_str = "SELECT name, usage FROM emotes ORDER BY usage DESC LIMIT 10"
+        await client.connect();
+
+        await client
+            .query({
+                rowMode: 'array',
+                text: query_str
+            })
+            .then(res => {
+                console.log(res.rows);
+            })
+            .catch(e => console.error(e.stack));
+
+        await client.end();
+
+    },
     
     executeCustomQuery : async function(queryString, message) {
         const { Client } = require('pg')

@@ -374,6 +374,12 @@ bot.on("message", function(message){
         }
     }
 
+    // MARK: - Query Emote usage
+    if (input.startsWith("!emoteusage")) {
+        console.log(">>>> emote usage calling db")
+        db.getTop10UsedEmotes(message);
+    }
+
     // Sending image from url
     // if(input.indexOf('test')==0) {
     //     message.channel.send("", {files: ['https://cdn.frankerfacez.com/7390d699a3362a0f5a7fe4ca3c643b24.PNG']})
