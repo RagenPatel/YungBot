@@ -10,7 +10,6 @@ var esp32 = require('./classes/IoT/esp32.js');
 
 const spawn = require("child_process").spawn;
 const { BitlyClient } = require('bitly');
-const { Kayn, REGIONS } = require('kayn')
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
@@ -46,7 +45,6 @@ var api_key = process.env.RIOT_API;
 var bitly_key = process.env.BITLY_API;
 
 const bitly = new BitlyClient(bitly_key, {});
-const kayn = Kayn(api_key)()
 
 
 //======================================================================================================================
@@ -139,37 +137,6 @@ bot.on("message", function(message){
         message.channel.send(embed);    
     }
 
-    function summonerInfo(input, retStuff) {
-        console.log(input.substr(1));
-        var name = input.substr(1);
-
-        // Get summoner by name, get data and output
-        kayn.Summoner.by.name(name)
-        .then(summoner => {
-            var sName = summoner['name'];
-            var sID = summoner['id'];
-            var sLvl = summoner['summonerLevel'];
-
-            if(retStuff == true) {
-                return sID;
-            }
-
-            const embed = new RichEmbed()
-            .setTitle('Summoner Info')
-            .setColor("#45bf18")
-            .addField("Name", sName)
-            .addField("ID", sID)
-            .addField("Level", sLvl)
-            .setURL("http://na.op.gg/summoner/userName=" + sName)
-
-            message.channel.send(embed);
-        })
-        .catch(error => {
-            message.channel.send("Something is not right 🤔")
-            console.error(error)
-        })
-    }
-
     //test second .js file
     // var checkEmote = false
     checkEmote = emotes.checkForEmotes(input, message);
@@ -228,25 +195,28 @@ bot.on("message", function(message){
     //   }
     // }
 
-    if(input.indexOf("?emote") == 0) {
-        var path = './emotesImages';
- 
-        fs.readdir(path, function(err, items) {
-            console.log(items);
-            var emoteList = ""
-            const embed = new RichEmbed();
+    if(input.indexOf("?emotes") == 0 || input.indexOf("!emotes") == 0) {
 
-            for (var i=0; i<items.length; i++) {
-                if (items[i].includes(".png")) {
-                    emoteList += items[i].replace(".png", "") + "\n";
-                }
-            }
-    
-            message.channel.send(embed
-                .setColor("#31a9c6")
-                .addField("Emote List", emoteList))
-                .catch(console.error);
-        });
+        message.channel.send(embed
+            .setColor("#31a9c6")
+            .setTitle("YungBot GIF Emotes")
+            .setURL("https://yungbotemotes.github.io/"))
+            .catch(console.error);
+            // .addField("Emote List", emoteList))
+
+        // var path = './emotesImages';
+ 
+        // fs.readdir(path, function(err, items) {
+        //     console.log(items);
+        //     var emoteList = ""
+        //     const embed = new RichEmbed();
+
+        //     for (var i=0; i<10; i++) {
+        //         if (items[i].includes(".png")) {
+        //             emoteList += items[i].replace(".png", "") + "\n";
+        //         }
+        //     }
+        // });
     }
 
     if(input.includes("ice_poseidon") && input.includes('reddit.com')) {
