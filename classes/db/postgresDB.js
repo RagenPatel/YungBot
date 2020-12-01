@@ -19,8 +19,7 @@ module.exports = {
         })
         .then(r => {
             console.log(">>>> DB Queries")
-            client.release();
-            // console.log(r.rows)
+            console.log(">>>> rows: " + r.rows)
             if (r.rows.length > 0) {
                 console.log(r.rows)
                 // message.channel.send("", {files: [r.rows[0][2]]});
@@ -37,7 +36,6 @@ module.exports = {
                 update_query = 'Update emotes Set usage = usage + 1 WHERE LOWER(name)=LOWER(\'' + word + '\');'
                 console.log("query: " + update_query);
                 client.query(update_query, (err, result) => {
-                    release();
                     if (err) {
                         console.log("ERROR OR RES: " + err.message);
                     } else {
