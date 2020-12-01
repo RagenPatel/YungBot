@@ -67,6 +67,17 @@ module.exports = {
             })
             .then(res => {
                 console.log(res.rows);
+                const embed = new RichEmbed()
+                .setTitle('Emote Usage Stats')
+                .setColor("#45bf18")
+
+                const rows = res.rows;
+
+                for (var i = 0; i < rows.length; i++) {
+                    embed.addField(rows[i][0], "Used: " + rows[i][1]);
+                }
+                
+            message.channel.send(embed);   
             })
             .catch(e => console.error(e.stack));
 
