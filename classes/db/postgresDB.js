@@ -22,17 +22,6 @@ module.exports = {
             client.release();
             // console.log(r.rows)
             if (r.rows.length > 0) {
-                // Update DB here. Increase usage by 1
-                update_query = 'Update emotes Set usage = usage + 1 WHERE LOWER(name)=LOWER(\'' + word + '\');'
-                client.query(update_query, (err, result) => {
-                    release();
-                    if (err) {
-                        console.log("ERROR OR RES: " + err.message);
-                    } else {
-                        console.log(result);
-                    }
-                })
-
                 console.log(r.rows)
                 // message.channel.send("", {files: [r.rows[0][2]]});
                 if (r.rows[0][2].indexOf(".png") >= 0 || r.rows[0][2].indexOf(".PNG") >= 0) {
@@ -43,6 +32,18 @@ module.exports = {
                         name: r.rows[0][1]+'.gif'
                     }]})
                 }
+
+                // Update DB here. Increase usage by 1
+                update_query = 'Update emotes Set usage = usage + 1 WHERE LOWER(name)=LOWER(\'' + word + '\');'
+                console.log("query: " + update_query);
+                client.query(update_query, (err, result) => {
+                    release();
+                    if (err) {
+                        console.log("ERROR OR RES: " + err.message);
+                    } else {
+                        console.log(result);
+                    }
+                })
                 return true;
             } else {
                 return false;
