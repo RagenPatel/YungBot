@@ -196,7 +196,7 @@ bot.on("message", function(message){
     // }
 
     if(input.indexOf("?emotes") == 0 || input.indexOf("!emotes") == 0) {
-
+        const embed = new RichEmbed()
         message.channel.send(embed
             .setColor("#31a9c6")
             .setTitle("YungBot GIF Emotes")
