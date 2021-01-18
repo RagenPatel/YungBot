@@ -142,7 +142,7 @@ module.exports = {
         const { Client } = require('pg')
         const client = new Client()
 
-        var sql_query = 'INSERT into emotes (id, name, url, usage) VALUES (12, \'' + word + '\', \'' + url + '\', 1000)'
+        var sql_query = 'INSERT into emotes (id, name, url, usage) VALUES (12, \'' + word + '\', \'' + url + '\', 0)'
         // var sql_query = 'SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'' + word + '\')'
         await client.connect();
         await client.query({
