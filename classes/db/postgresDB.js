@@ -153,7 +153,7 @@ module.exports = {
             // console.log(r.rows)
             const embed = new RichEmbed()
             .setTitle("Success!")
-            .addField("Added " + emote + " from database.")
+            .addField("Added " + word + " to database.")
             .setColor(successColor)
             message.channel.send(embed); 
         })
@@ -165,9 +165,6 @@ module.exports = {
             message.channel.send(embed);
         })
         await client.end()
-        return false
-
-
     }
 
     // updateChampions : async function() {
