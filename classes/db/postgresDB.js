@@ -122,7 +122,7 @@ module.exports = {
             // console.log(r.rows)
             const embed = new RichEmbed()
             .setTitle("Success!")
-            .addField("Removed " + emote + " from database.")
+            .addField(emote, "Removed " + emote + " from database.")
             .setColor(successColor)
             message.channel.send(embed); 
         })
