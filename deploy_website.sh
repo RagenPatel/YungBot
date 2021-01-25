@@ -6,6 +6,8 @@ STR_TRUE="true"
 
 python3 /home/pi/YungBot/LeagueDiscord/updateEmotesWebsite.py
 
+export $(egrep -v '^#' .env | xargs)
+
 if [ $SHOULD_DEPLOY = $STR_TRUE ]
 then
     echo "deploying : ${SHOULD_DEPLOY}"
