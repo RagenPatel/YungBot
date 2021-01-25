@@ -6,3 +6,4 @@ node_modules
 test.js
 env
 redditPosts.txt
+temp.sh

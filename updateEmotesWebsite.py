@@ -2,6 +2,7 @@ import json
 import requests
 import psycopg2
 from dotenv import load_dotenv
+import dotenv
 import os
 # OR, explicitly providing path to '.env'
 from pathlib import Path  # python3 only
@@ -40,6 +41,7 @@ try:
     print("You are connected to - ", record,"\n")
     
     data = updateJSONForWebsite(cursor, connection)
+    data.sort(key=lambda x:x[1])
     arr = []
     for tupl in data:
         tmp = []
@@ -52,8 +54,19 @@ try:
     
     jsn = { "emotes": arr }
     # print(jsn)
-    print(os.getenv("REACT_DIR"))
-    print(path.write_text(json.dumps(jsn, indent=4)))
+    curr_json_file = open(os.getenv("REACT_DIR"), "r")
+    curr_json = json.load(curr_json_file)
+
+    new_json = jsn
+    if curr_json == new_json:
+        # Set env variable to false
+        os.environ["SHOULD_DEPLOY"] = "false"
+        dotenv.set_key(env_path, "SHOULD_DEPLOY", os.environ["SHOULD_DEPLOY"])
+    else:
+        # Set env variable to True and write new file
+        os.environ["SHOULD_DEPLOY"] = "true"
+        dotenv.set_key(env_path, "SHOULD_DEPLOY", os.environ["SHOULD_DEPLOY"])
+        print(path.write_text(json.dumps(jsn, indent=4)))
     
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL: ", error)
