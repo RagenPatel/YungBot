@@ -4,6 +4,7 @@ from discord.ext import commands
 import datetime
 import psutil
 from dotenv import load_dotenv
+import subprocess
 
 load_dotenv()
 
@@ -75,8 +76,26 @@ async def usage(ctx):
     await ctx.send(embed=embedVar)
 
 @bot.command()
+async def v2clean(ctx):
+    output = subprocess.run(["pgrep", "-af", "python"], capture_output=True).stdout.decode('UTF-8')
+
+    known_names = ["python_discord.py", "live_youtube_check.py", "get_twitch_live.py", "post_anime_episode_updates.py"]
+
+    for python_script in known_names:
+        #pkill -9 -f script.py
+        output = subprocess.run(["sudo", "pkill", "-9", "-f", python_script], capture_output=True).stdout.decode('UTF-8')
+        
+        with open("usage.log", 'w+') as f:
+            f.write(output+"\n")
+    
+    with open("usage.log", 'w+') as f:
+        f.write("---------------------------\n")
+
+    await ctx.send(output)
+
+@bot.command()
 async def test(ctx):
-    ctx.send("v2 version")
+    await ctx.send("v2 version")
 
 token = os.getenv("DISCORD_API_TOKEN")
 bot.run(token)
