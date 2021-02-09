@@ -76,16 +76,6 @@ async def usage(ctx):
     await ctx.send(embed=embedVar)
 
 @bot.command()
-async def v2clean(ctx):
-    known_names = ["python_discord.py", "live_youtube_check.py", "get_twitch_live.py", "post_anime_episode_updates.py"]
-
-    for python_script in known_names:
-        #pkill -9 -f script.py
-        output = subprocess.run(["sudo", "pkill", "-9", "-f", python_script], capture_output=True).stdout.decode('UTF-8')
-        
-    await ctx.send("done")
-
-@bot.command()
 async def test(ctx):
     await ctx.send("v2 version")
 
