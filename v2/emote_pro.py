@@ -12,6 +12,7 @@ load_dotenv()
 
 client = discord.Client()
 
+
 def emote_stats_to_postgres(emote):
     try:
         connection = psycopg2.connect(user = os.getenv("PGUSER"),
@@ -20,6 +21,8 @@ def emote_stats_to_postgres(emote):
                                   port = os.getenv("PGPORT"),
                                   database = os.getenv("PGDATABASE"))
         cursor = connection.cursor()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print ("Error while INSERT TO table", error)
         
 
 def get_emote_from_frankerfacez(emote):
