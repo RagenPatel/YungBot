@@ -14,33 +14,36 @@ client = discord.Client()
 
 
 def emote_stats_to_postgres(emote):
-    try:
-        connection = psycopg2.connect(user = os.getenv("PGUSER"),
-                                  password = os.getenv("PGPASSWORD"),
-                                  host = os.getenv("PGHOST"),
-                                  port = os.getenv("PGPORT"),
-                                  database = os.getenv("PGDATABASE"))
-        cursor = connection.cursor()
+    conn = psycopg2.connect(user = os.getenv("PGUSER"),
+                                password = os.getenv("PGPASSWORD"),
+                                host = os.getenv("PGHOST"),
+                                port = os.getenv("PGPORT"),
+                                database = os.getenv("PGDATABASE"))
 
-        # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
-        query = "SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'"+ emote +"\');"
-        cursor.execute(query)
+    emoteExists = False
 
-        dat = cursor.fetchall()
-        
-        if len(dat) > 0:
-            # Emote already exists, increment by 1
-            update_query = 'Update emotes Set usage = usage + 1 WHERE LOWER(name)=LOWER(\'' + emote + '\');'
-            cursor.execute(update_query)
-        else:
-            # Emote doesnt exist, insert entry
-            insert_query = 'INSERT into emotes (id, name, url, usage) VALUES (50, \'' + emote + '\', NULL, 1'
-            cursor.execute(insert_query)
+    with conn:
+        with conn.cursor() as curs:
+            # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
+            query = "SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'"+ emote +"\');"
+            curs.execute(query)
 
-        connection.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print ("Error while INSERT TO table", error)
-        
+            dat = curs.fetchall()
+            if len(dat) > 0:
+                emoteExists = True
+
+    with conn:
+        with conn.cursor() as curs:
+            if emoteExists:
+                # Emote already exists, increment by 1
+                update_query = 'Update emotes Set usage = usage + 1 WHERE LOWER(name)=LOWER(\'' + emote.lower() + '\');'
+                curs.execute(update_query)
+            else:
+                # Emote doesnt exist, insert entry
+                insert_query = 'INSERT into emotes (id, name, url, usage) VALUES (50, \'' + emote.lower() + '\', \'nil\', 1)'
+                curs.execute(insert_query)
+
+    conn.close()
 
 def get_emote_from_frankerfacez(emote):
     base_url = "https://api.frankerfacez.com/v1/emotes"
