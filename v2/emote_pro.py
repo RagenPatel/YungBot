@@ -21,6 +21,23 @@ def emote_stats_to_postgres(emote):
                                   port = os.getenv("PGPORT"),
                                   database = os.getenv("PGDATABASE"))
         cursor = connection.cursor()
+
+        # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
+        query = "SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'"+ emote +"\');"
+        cursor.execute(query)
+
+        dat = cursor.fetchall()
+        
+        if len(dat) > 0:
+            # Emote already exists, increment by 1
+            update_query = 'Update emotes Set usage = usage + 1 WHERE LOWER(name)=LOWER(\'' + emote + '\');'
+            cursor.execute(update_query)
+        else:
+            # Emote doesnt exist, insert entry
+            insert_query = 'INSERT into emotes (id, name, url, usage) VALUES (50, \'' + emote + '\', NULL, 1'
+            cursor.execute(insert_query)
+
+        connection.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print ("Error while INSERT TO table", error)
         
@@ -51,9 +68,11 @@ def get_emote_from_frankerfacez(emote):
     if len(emote_dict) > 0:
         if '2' in emote_dict[0]['urls']:
             # PSQL stuff here
+            emote_stats_to_postgres(emote)
             return emote_dict[0]['urls']['2']
         elif '1' in emote_dict[0]['urls']:
             # PSQL stuff here
+            emote_stats_to_postgres(emote)
             return emote_dict[0]['urls']['1']
     
     return None
