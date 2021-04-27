@@ -6,9 +6,21 @@ import json
 from dotenv import load_dotenv
 from collections import OrderedDict
 
+import psycopg2
+
 load_dotenv()
 
 client = discord.Client()
+
+def emote_stats_to_postgres(emote):
+    try:
+        connection = psycopg2.connect(user = os.getenv("PGUSER"),
+                                  password = os.getenv("PGPASSWORD"),
+                                  host = os.getenv("PGHOST"),
+                                  port = os.getenv("PGPORT"),
+                                  database = os.getenv("PGDATABASE"))
+        cursor = connection.cursor()
+        
 
 def get_emote_from_frankerfacez(emote):
     base_url = "https://api.frankerfacez.com/v1/emotes"
@@ -35,8 +47,10 @@ def get_emote_from_frankerfacez(emote):
 
     if len(emote_dict) > 0:
         if '2' in emote_dict[0]['urls']:
+            # PSQL stuff here
             return emote_dict[0]['urls']['2']
         elif '1' in emote_dict[0]['urls']:
+            # PSQL stuff here
             return emote_dict[0]['urls']['1']
     
     return None
