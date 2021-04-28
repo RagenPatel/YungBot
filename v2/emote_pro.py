@@ -95,7 +95,7 @@ def checkBTTV(emote):
 
             dat = curs.fetchall()
             if len(dat) > 0:
-                return dat[0][2]
+                return dat[0][2]+".gif"
             
             return None
     conn.close()
@@ -129,8 +129,10 @@ async def on_message(message):
 
                 # if emote exists in BTTV, return it
                 if bttv_url is not None:
+                    print("sending_bttv")
                     await message.channel.send(bttv_url)
-                else:    
+                else:
+                    print("sending franker")
                     # check frankerFacez
                     emote_url = get_emote_from_frankerfacez(emote)
 
