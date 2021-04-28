@@ -94,10 +94,12 @@ def checkBTTV(emote):
             curs.execute(query)
 
             dat = curs.fetchall()
+            print(dat)
             if len(dat) > 0:
                 return dat[0]['url']
             
             return None
+    conn.close()
 
 
 def parse_emote_list(emote_json, emote_dict):
