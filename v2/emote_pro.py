@@ -94,9 +94,8 @@ def checkBTTV(emote):
             curs.execute(query)
 
             dat = curs.fetchall()
-            print(dat)
             if len(dat) > 0:
-                return dat[0]['url']
+                return dat[0][2]
             
             return None
     conn.close()
@@ -122,22 +121,22 @@ async def on_message(message):
     for word in message_arr:
         # for each word, check if it has :word: format
         # if it does, look up in frankerFacez
-        if word[0] == ':' and word[-1] == ':' and len(word) > 2:
+        if len(word) > 2 and word[0] == ':' and word[-1] == ':':
             emote = word[1:len(word)-1]
             if " " not in emote:
                 #check BTTV
                 bttv_url = checkBTTV(emote)
 
                 # if emote exists in BTTV, return it
-                if bttv_url not None:
-                    return bttv_url
-                    
-                # check frankerFacez
-                emote_url = get_emote_from_frankerfacez(emote)
+                if bttv_url is not None:
+                    await message.channel.send(bttv_url)
+                else:    
+                    # check frankerFacez
+                    emote_url = get_emote_from_frankerfacez(emote)
 
-                if emote_url != None:
-                    formatted_url = "https://" + emote_url[2:]
-                    await message.channel.send(formatted_url)
+                    if emote_url != None:
+                        formatted_url = "https://" + emote_url[2:]
+                        await message.channel.send(formatted_url)
 
     print(message_arr)
 
