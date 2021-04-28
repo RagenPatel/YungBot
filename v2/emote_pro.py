@@ -80,6 +80,25 @@ def get_emote_from_frankerfacez(emote):
     
     return None
 
+def checkBTTV(emote):
+    conn = psycopg2.connect(user = os.getenv("PGUSER"),
+                                password = os.getenv("PGPASSWORD"),
+                                host = os.getenv("PGHOST"),
+                                port = os.getenv("PGPORT"),
+                                database = os.getenv("PGDATABASE"))
+    
+    with conn:
+        with conn.cursor() as curs:
+            # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
+            query = "SELECT * FROM bttvemotes WHERE LOWER(name)=LOWER(\'"+ emote +"\');"
+            curs.execute(query)
+
+            dat = curs.fetchall()
+            if len(dat) > 0:
+                return dat[0]['url']
+            
+            return None
+
 
 def parse_emote_list(emote_json, emote_dict):
     for emote_details in emote_json['emoticons']:
@@ -104,6 +123,13 @@ async def on_message(message):
         if word[0] == ':' and word[-1] == ':' and len(word) > 2:
             emote = word[1:len(word)-1]
             if " " not in emote:
+                #check BTTV
+                bttv_url = checkBTTV(emote)
+
+                # if emote exists in BTTV, return it
+                if bttv_url not None:
+                    return bttv_url
+                    
                 # check frankerFacez
                 emote_url = get_emote_from_frankerfacez(emote)
 
