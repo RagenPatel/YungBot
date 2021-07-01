@@ -31,7 +31,7 @@ def send_message(resp):
         print(chat)
         if chat.lower().find('xqcow@xqcow.tmi.twitch.tv') > 0:
             dat = { "content": chat[49:] }
-            print(dat)
+            # print(dat)
             requests.post(url=websocket_url, data=dat)
 
 while True:
