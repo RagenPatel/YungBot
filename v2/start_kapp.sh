@@ -1,5 +1,6 @@
 #!/bin/bash/
 cd /home/pi/YungBot/LeagueDiscord/v2
+source venv/bin/activate
 python3 kill_kappabot.py > /home/pi/YungBot/LeagueDiscord/v2/kill_kappabot.log
 python3 xqc_chat.py
 sudo su kapp
