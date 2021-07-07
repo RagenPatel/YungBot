@@ -34,9 +34,6 @@ def send_message(resp):
         elif chat.lower().find('loltyler1@loltyler1.tmi.twitch.tv') > 0:
             dat = { "content": chat[61:]}
             requests.post(url=websocket_url, data=dat)
-        elif chat.lower().find(os.getenv("TEMP_USER")) > 0:
-            dat = { "content": chat[60:] }
-            requests.post(url=websocket_url, data=dat)
 
 while True:
     resp = sock.recv(2048).decode('utf-8')
