@@ -6,6 +6,7 @@ from emoji import demojize
 
 load_dotenv()
 
+x_websocket = os.getenv('XQC_WEBSOCKET')
 websocket_url = os.getenv('T1_WEBSOCKET')
 
 server = 'irc.chat.twitch.tv'
@@ -28,9 +29,9 @@ def send_message(resp):
     for chat in arr:
         print(chat)
         if chat.lower().find('xqcow@xqcow.tmi.twitch.tv') > 0:
-            dat = { "content": chat[49:] }
+            dat = { "content": "X in T1 chat: " + chat[49:] }
             # print(dat)
-            requests.post(url=websocket_url, data=dat)
+            requests.post(url=x_websocket, data=dat)
         elif chat.lower().find('loltyler1@loltyler1.tmi.twitch.tv') > 0:
             dat = { "content": chat[61:]}
             requests.post(url=websocket_url, data=dat)
