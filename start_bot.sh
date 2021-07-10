@@ -9,5 +9,4 @@ python3 monitorPi.py &
 
 source venv/bin/activate
 python3 emote_pro.py > emote_pro.log &
-python3 xqc_chat.py &
-python3 t1_chat.py &
+python3 twitch_chat.py &
