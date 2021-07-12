@@ -62,7 +62,7 @@ for row in db_info:
     sock.send(f"JOIN {db_info[row]['channel_id']}\n".encode('utf-8'))
 
 def get_message_info(message):
-    search = re.search(':(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*) :(.*)', message)
+    search = re.search(':(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*?) :(.*)', message)
 
     if search is not None:
         username, channel, message = search.groups()
