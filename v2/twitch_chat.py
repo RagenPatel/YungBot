@@ -12,6 +12,10 @@ from discord import Webhook, RequestsWebhookAdapter
 
 load_dotenv()
 
+def send_custom_message(message):
+    hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
+    hook.send("Error Connecting to channels: \`\`\`" + message + "\`\`\`", username="🚨 Mod 🚨", avatar_url="https://upload.wikimedia.org/wikipedia/commons/e/ea/Settings_%28iOS%29.png")
+
 def jsonify_data(data):
     dat = {}
     data = json.dumps(data)
@@ -48,7 +52,14 @@ token = os.getenv('TWITCH_AUTH')
 
 sock = socket.socket()
 
-sock.connect((server, port))
+sock.settimeout(60)
+
+try:
+    sock.connect((server, port))
+except socket.error as exc:
+    send_custom_message(exc)
+except Exception as exc:
+    send_custom_message(exc)
 
 # Get table info from psql with channels. For each row, join the channel
 # then when receiving a message, decode each line to get the user, channel, and message
