@@ -83,22 +83,6 @@ bot.on("message", function(message){
     // var checkEmote = false
     checkEmote = emotes.checkForEmotes(input, message);
 
-    if(input.indexOf("#region") == 0){
-        var arr = input.split(" ");
-        if(arr.length != 2){
-            message.channel.send("invalid # of arguments.");
-        }else{
-            region = arr[1];
-            message.channel.send("region set to: "+ region);
-            console.log("region set to: "+ region);
-        }
-    }
-
-    if(input.indexOf("#getregion") >= 0){
-        console.log("current region: "+ region);
-        message.channel.send("current region: "+ region);
-    }
-
     if(input == "dlift"){
         message.channel.send(" Doublelift is a God");
         message.channel.send("https://i.ytimg.com/vi/vN7EoPlxQsQ/hqdefault.jpg");
