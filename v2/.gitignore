@@ -2,3 +2,4 @@ venv
 usage.log
 main.py
 test*
+cogs*
