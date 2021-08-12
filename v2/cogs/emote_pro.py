@@ -61,6 +61,10 @@ class Emotes(commands.Cog):
                         if data is not None:
                             await message.channel.send(file=discord.File(data, word + ".gif"))
 
+    @commands.command()
+    async def emoteusage(self, ctx):
+        # do something ehre
+
     # Helpers ------------------------
     async def send_image(self, url):
         async with aiohttp.ClientSession() as session:
