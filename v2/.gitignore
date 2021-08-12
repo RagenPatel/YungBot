@@ -1,4 +1,4 @@
 venv
 usage.log
 test*
-cogs*
+__pycache__
