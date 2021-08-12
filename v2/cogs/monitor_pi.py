@@ -27,6 +27,14 @@ class PiStats(commands.Cog):
 
         await ctx.send(embed=embedVar)
 
+    @commands.command()
+    async def reboot(self, ctx):
+        embed = discord.Embed(title="Rebooting...", color=discord.Colour.from_rgb(255, 219, 110))
+        await ctx.send(embed=embed)
+
+        os.system('sudo shutdown -r now')
+
+
     # Helpers ----------------------------------------------------
     def getCPU(self, embed):
         # per core 

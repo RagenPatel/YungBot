@@ -83,34 +83,6 @@ bot.on("message", function(message){
     // var checkEmote = false
     checkEmote = emotes.checkForEmotes(input, message);
 
-    if(input == "dlift"){
-        message.channel.send(" Doublelift is a God");
-        message.channel.send("https://i.ytimg.com/vi/vN7EoPlxQsQ/hqdefault.jpg");
-    }
-
-    if(input.indexOf("?emotes") == 0 || input.indexOf("!emotes") == 0) {
-        const embed = new RichEmbed()
-        message.channel.send(embed
-            .setColor("#31a9c6")
-            .setTitle("YungBot GIF Emotes")
-            .setURL("https://yungbotemotes.github.io/"))
-            .catch(console.error);
-    }
-
-    if((input.includes("c9") || input.includes(" na ") || input.includes("sneaky"))) {
-        sentimentAnalysis.sentiment(input, message);
-    }
-
-    if(input.indexOf("emojis") == 0) {
-        emojis.addEmojis(input, message);
-    }
-
-    // help command
-    if(input.indexOf("!help")==0){
-        console.log("called help command");
-        help();
-    }
-
     if(input.indexOf("!reboot") == 0) {
         const embed = new RichEmbed()
             .setTitle('Rebooting server')

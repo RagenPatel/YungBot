@@ -63,7 +63,79 @@ class Emotes(commands.Cog):
 
     @commands.command()
     async def emoteusage(self, ctx):
-        # do something ehre
+        # do something here
+        conn = psycopg2.connect(user = os.getenv("PGUSER"),
+                                    password = os.getenv("PGPASSWORD"),
+                                    host = os.getenv("PGHOST"),
+                                    port = os.getenv("PGPORT"),
+                                    database = os.getenv("PGDATABASE"))
+        
+        with conn:
+            with conn.cursor() as curs:
+                # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
+                query = "SELECT name, usage FROM emotes ORDER BY usage DESC LIMIT 10"
+                
+                curs.execute(query)
+                dat = curs.fetchall()
+
+                embed = discord.Embed(title="Emote Usage Stats", color=discord.Colour.from_rgb(188, 66, 245))
+
+                for stat in dat:
+                    embed.add_field(name=stat[0], value="Used: " + str(stat[1]), inline=False)
+
+                await ctx.send(embed=embed)
+
+        conn.close()
+
+    @commands.command()
+    async def removeemote(self, ctx, emote):
+        conn = psycopg2.connect(user = os.getenv("PGUSER"),
+                                    password = os.getenv("PGPASSWORD"),
+                                    host = os.getenv("PGHOST"),
+                                    port = os.getenv("PGPORT"),
+                                    database = os.getenv("PGDATABASE"))
+        
+        with conn:
+            with conn.cursor() as curs:
+                # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
+                query = 'DELETE FROM emotes WHERE LOWER(name)=LOWER(\'' + emote + '\')'
+                
+                curs.execute(query)
+
+                embed = discord.Embed(color=discord.Colour.from_rgb(155, 245, 66))
+                embed.add_field(name="Success!", value="Removed " + str(emote) + " from database.", inline=False)
+
+                await ctx.send(embed=embed)
+
+        conn.close()
+
+    @commands.command()
+    async def addemote(self, ctx, emote, url):
+        conn = psycopg2.connect(user = os.getenv("PGUSER"),
+                                    password = os.getenv("PGPASSWORD"),
+                                    host = os.getenv("PGHOST"),
+                                    port = os.getenv("PGPORT"),
+                                    database = os.getenv("PGDATABASE"))
+        
+        with conn:
+            with conn.cursor() as curs:
+                # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
+                query = 'INSERT into emotes (id, name, url, usage) VALUES (12, \'' + emote + '\', \'' + url + '\', 0)'
+                
+                curs.execute(query)
+
+                embed = discord.Embed(color=discord.Colour.from_rgb(155, 245, 66))
+                embed.add_field(name="SUCCESS!", value="Added " + str(emote) + " to database.", inline=False)
+
+                await ctx.send(embed=embed)
+
+        conn.close()
+
+    @commands.command()
+    async def emotes(self, ctx):
+        embed = discord.Embed(title="Emotes List", url='https://yungbotemotes.github.io/', color=discord.Colour.from_rgb(55, 227, 250))
+
+        await ctx.send(embed=embed)
 
     # Helpers ------------------------
     async def send_image(self, url):
@@ -185,7 +257,6 @@ class Emotes(commands.Cog):
                 
                 return None
         conn.close()
-
 
     def parse_emote_list(self, emote_json, emote_dict):
         for emote_details in emote_json['emoticons']:
