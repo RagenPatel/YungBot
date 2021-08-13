@@ -14,6 +14,7 @@ class PiStats(commands.Cog):
 
     @commands.command()
     async def usage(self, ctx):
+        """Get Raspberry Pi usage info. (i.e. temp, CPU/RAM usage)"""
         temp = self.getTemp()
 
         embedVar = discord.Embed(title="Pi Usage", color=discord.Colour.from_rgb(temp[1][0], temp[1][1], temp[1][2]))
@@ -29,11 +30,25 @@ class PiStats(commands.Cog):
 
     @commands.command()
     async def reboot(self, ctx):
+        """Reboot Pi."""
         embed = discord.Embed(title="Rebooting...", color=discord.Colour.from_rgb(255, 219, 110))
         await ctx.send(embed=embed)
 
         os.system('sudo shutdown -r now')
 
+    @commands.command()
+    async def kill(self, ctx):
+        """Kills kappabot 😈😈"""
+        embed = discord.Embed(title="Killing Kappabot", color=discord.Colour.from_rgb(245, 49, 49))
+
+        msg = await ctx.send(embed=embed)
+
+        os.system('sudo pkill -f tweet_posts.py')
+        os.system('sudo pkill -f python_discord.py')
+        os.system('sudo pkill -f live_youtube_check.py')
+        os.system('sudo pkill -f get_twitch_live.py')
+        os.system('sudo pkill -f post_anime_episode_updates.py')
+        os.system('sudo pkill -f reset_twitter_script.py')
 
     # Helpers ----------------------------------------------------
     def getCPU(self, embed):

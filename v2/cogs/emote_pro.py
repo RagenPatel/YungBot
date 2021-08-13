@@ -19,6 +19,7 @@ class Emotes(commands.Cog):
     
     @commands.Cog.listener("on_message")
     async def post_emotes(self, message):
+        """Posts emote if found in a message."""
         if message.author == self.bot.user:
             return  # no recursive loop from bot posts
 
@@ -63,6 +64,7 @@ class Emotes(commands.Cog):
 
     @commands.command()
     async def emoteusage(self, ctx):
+        """Shows top 10 most used emotes"""
         # do something here
         conn = psycopg2.connect(user = os.getenv("PGUSER"),
                                     password = os.getenv("PGPASSWORD"),
@@ -89,6 +91,7 @@ class Emotes(commands.Cog):
 
     @commands.command()
     async def removeemote(self, ctx, emote):
+        """Remove emote from database. (eg: **!removeemote lul**)"""
         conn = psycopg2.connect(user = os.getenv("PGUSER"),
                                     password = os.getenv("PGPASSWORD"),
                                     host = os.getenv("PGHOST"),
@@ -111,6 +114,7 @@ class Emotes(commands.Cog):
 
     @commands.command()
     async def addemote(self, ctx, emote, url):
+        """Add an emote to database. (eg: **!addemote lul https://url.com/lul.png**)"""
         conn = psycopg2.connect(user = os.getenv("PGUSER"),
                                     password = os.getenv("PGPASSWORD"),
                                     host = os.getenv("PGHOST"),
@@ -133,6 +137,7 @@ class Emotes(commands.Cog):
 
     @commands.command()
     async def emotes(self, ctx):
+        """Posts a link to old emotes"""
         embed = discord.Embed(title="Emotes List", url='https://yungbotemotes.github.io/', color=discord.Colour.from_rgb(55, 227, 250))
 
         await ctx.send(embed=embed)
