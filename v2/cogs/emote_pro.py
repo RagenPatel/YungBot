@@ -156,17 +156,11 @@ class Emotes(commands.Cog):
         with conn:
             with conn.cursor() as curs:
                 # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
-                query = "SELECT * FROM bttvemotes WHERE LOWER(name)=LOWER(\'"+ emote +"\');"
+                query = "SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'"+ emote +"\');"
                 curs.execute(query)
                 dat = curs.fetchall()
                 if len(dat) > 0:
-                    return dat[0][2]+".gif"
-                else:
-                    query = "SELECT * FROM emotes WHERE LOWER(name)=LOWER(\'"+ emote +"\');"
-                    curs.execute(query)
-                    dat = curs.fetchall()
-                    if len(dat) > 0:
-                        return dat[0][2]
+                    return dat[0][2]
                 
                 return None
         conn.close()
