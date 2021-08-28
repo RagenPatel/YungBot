@@ -50,6 +50,12 @@ class PiStats(commands.Cog):
         os.system('sudo pkill -f post_anime_episode_updates.py')
         os.system('sudo pkill -f reset_twitter_script.py')
 
+    @commands.command()
+    async def clearsongs(self, ctx):
+        """Clear all songs from botbot"""
+
+        os.system('sudo rm -rf /home/pi/Yashas-DiscordBot/discordbot/*.mp3')
+
     # Helpers ----------------------------------------------------
     def getCPU(self, embed):
         # per core 
