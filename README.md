@@ -45,3 +45,9 @@ Discord Bot that adds Twitch Emotes to Discord chat messages and replies to ques
 ### Pihole Setup
 
 1. Ignore localhost : https://docs.pi-hole.net/ftldns/configfile/
+
+
+------------
+
+#### Regex for Twitch
+`:(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*?) :(.*)`
