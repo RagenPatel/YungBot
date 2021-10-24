@@ -285,7 +285,7 @@ class Emotes(commands.Cog):
             # Find emote with gif imageType
             for emote in data:
                 if (emote['imageType'] == 'gif'):
-                    first_emote_url = 'https://cdn.betterttv.net/emote/{}/2x'.format(emote['id'])
+                    first_emote_url = 'https://cdn.betterttv.net/emote/{}/2x'.format(emote['id']) + '.gif'
 
         return first_emote_url, data
     
