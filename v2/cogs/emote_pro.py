@@ -10,6 +10,7 @@ import io
 import aiohttp
 
 import psycopg2
+from requests.api import request
 
 load_dotenv()
 
@@ -44,6 +45,18 @@ class Emotes(commands.Cog):
                         if emote_url != None:
                             formatted_url = "https://" + emote_url[2:]
                             await message.channel.send(formatted_url)
+            elif len(word) > 2 and word[0] == '#' and word[-1] == '#':
+                channel = message.channel
+                async with channel.typing():
+                    emote_url, data = self.query_BTTV(word[1:len(word)-1])
+
+                if (emote_url is not None):
+                    msg = await channel.send(emote_url)
+                else:
+                    msg = await channel.send("🤔")
+                    await msg.delete()
+
+
             elif word == 'D:':
                 await message.channel.send(file=discord.File('./emotesImages/D.png'))
             else:
@@ -262,6 +275,16 @@ class Emotes(commands.Cog):
             emote_dict.append(emote_details)
 
         return emote_dict
+
+    def query_BTTV(self, emote):
+        r = requests.get('https://api.betterttv.net/3/emotes/shared/search?query=' + emote + '&offset=0&limit=50')
+        data = r.json()
+
+        first_emote_url = None
+        if len(data) > 0 and 'message' not in data:
+            first_emote_url = 'https://cdn.betterttv.net/emote/{}/2x'.format(data[0]['id'])
+
+        return first_emote_url, data
     
 def setup(bot):
     bot.add_cog(Emotes(bot))
