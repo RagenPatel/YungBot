@@ -8,3 +8,4 @@ env
 redditPosts.txt
 temp.sh
 getBTTV.py
+*.ipynb
