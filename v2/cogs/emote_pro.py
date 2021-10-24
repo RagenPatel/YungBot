@@ -282,7 +282,10 @@ class Emotes(commands.Cog):
 
         first_emote_url = None
         if len(data) > 0 and 'message' not in data:
-            first_emote_url = 'https://cdn.betterttv.net/emote/{}/2x'.format(data[0]['id'])
+            # Find emote with gif imageType
+            for emote in data:
+                if (emote['imageType'] == 'gif'):
+                    first_emote_url = 'https://cdn.betterttv.net/emote/{}/2x'.format(emote['id'])
 
         return first_emote_url, data
     
