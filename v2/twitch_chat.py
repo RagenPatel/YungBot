@@ -93,9 +93,12 @@ def send_message(resp):
         if username in db_info:
             hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
             hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
-            
+
+f = open("twitchchat.txt", "w")
+
 while True:
-    resp = sock.recv(2048).decode('utf-8')
+    resp = sock.recv(16384).decode('utf-8')
+    f.write(resp)
 
     if resp.startswith('PING'):
         sock.send("PONG\n".encode('utf-8'))

@@ -2,3 +2,4 @@ venv
 usage.log
 __pycache__
 peepoJam.py
+*.txt
