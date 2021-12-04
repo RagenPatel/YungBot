@@ -102,6 +102,6 @@ while True:
 
     if resp.startswith('PING'):
         f.write('********PING RESP********\n')
-        sock.send('PONG\n'.encode('utf-8'))
+        sock.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
     elif len(resp) > 0:
         send_message(resp)
