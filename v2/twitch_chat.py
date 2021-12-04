@@ -97,10 +97,10 @@ def send_message(resp):
 f = open("twitchchat.txt", "w")
 
 while True:
-    resp = sock.recv(16384).decode('utf-8')
+    resp = sock.recv(2048).decode('utf-8')
     f.write(resp)
 
     if resp.startswith('PING'):
-        sock.send("PONG\n".encode('utf-8'))
+        sock.send('PONG :tmi.twitch.tv'.encode('utf-8'))
     elif len(resp) > 0:
         send_message(resp)
