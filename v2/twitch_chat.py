@@ -3,6 +3,7 @@ import os
 import re
 import requests
 import socket
+import logging
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -11,10 +12,12 @@ import json
 from discord import Webhook, RequestsWebhookAdapter
 
 load_dotenv()
+logging.basicConfig(filename='twitchchat.log', encoding='utf-8', level=logging.DEBUG)
 
 def send_custom_message(message):
     hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
     hook.send("Error Connecting to channels: \`\`\`" + message + "\`\`\`", username="🚨 Mod 🚨", avatar_url="https://upload.wikimedia.org/wikipedia/commons/e/ea/Settings_%28iOS%29.png")
+    logging.warning("Error Connecting to channels: \`\`\`" + message + "\`\`\`")
 
 def jsonify_data(data):
     dat = {}
@@ -52,14 +55,14 @@ token = os.getenv('TWITCH_AUTH')
 
 sock = socket.socket()
 
-sock.settimeout(60)
-
 try:
     sock.connect((server, port))
 except socket.error as exc:
     send_custom_message(exc)
+    logging.error(exc)
 except Exception as exc:
     send_custom_message(exc)
+    logging.error(exc)
 
 # Get table info from psql with channels. For each row, join the channel
 # then when receiving a message, decode each line to get the user, channel, and message
@@ -70,6 +73,7 @@ sock.send(f"NICK {nickname}\n".encode('utf-8'))
 
 for row in db_info:
     print(row)
+    logging.info(f'Joining: {row}')
     sock.send(f"JOIN {db_info[row]['channel_id']}\n".encode('utf-8'))
 
 def get_message_info(message):
@@ -83,9 +87,11 @@ def get_message_info(message):
 
 def send_message(resp):
     arr = resp.split('\n')
+    logging.info(f'SEND_MESSAGE: {arr}')
 
     for chat in arr:
         username, channel, message = get_message_info(chat)
+        logging.info(f'SEND_MESSAGE: {username}, {channel}, {message}')
 
         if username is None:
             continue
@@ -94,14 +100,12 @@ def send_message(resp):
             hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
             hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
 
-f = open("twitchchat.txt", "w")
-
 while True:
     resp = sock.recv(2048).decode('utf-8')
-    f.write(resp)
+    logging.info(resp)
 
     if resp.startswith('PING'):
-        f.write('********PING RESP********\n')
+        logging.info(f'PONG RESP {resp}')
         sock.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
     elif len(resp) > 0:
         send_message(resp)
