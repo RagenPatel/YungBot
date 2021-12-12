@@ -12,12 +12,12 @@ import json
 from discord import Webhook, RequestsWebhookAdapter
 
 load_dotenv()
-logging.basicConfig(filename='twitchchat.log', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='twitchchat.log', level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 def send_custom_message(message):
     hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
     hook.send("Error Connecting to channels: \`\`\`" + message + "\`\`\`", username="🚨 Mod 🚨", avatar_url="https://upload.wikimedia.org/wikipedia/commons/e/ea/Settings_%28iOS%29.png")
-    logging.warning("Error Connecting to channels: \`\`\`" + message + "\`\`\`")
+    logging.warning("SEND_CUSTOM_MESSAGE: Error Connecting to channels: \`\`\`" + message + "\`\`\`")
 
 def jsonify_data(data):
     dat = {}
@@ -73,7 +73,7 @@ sock.send(f"NICK {nickname}\n".encode('utf-8'))
 
 for row in db_info:
     print(row)
-    logging.info(f'Joining: {row}')
+    logging.info(f'JOINING: {row}')
     sock.send(f"JOIN {db_info[row]['channel_id']}\n".encode('utf-8'))
 
 def get_message_info(message):
@@ -87,25 +87,24 @@ def get_message_info(message):
 
 def send_message(resp):
     arr = resp.split('\n')
-    logging.info(f'SEND_MESSAGE: {arr}')
 
     for chat in arr:
         username, channel, message = get_message_info(chat)
-        logging.info(f'SEND_MESSAGE: {username}, {channel}, {message}')
 
         if username is None:
             continue
 
         if username in db_info:
+            logging.info(f'SEND_MESSAGE: {username}, {channel}, {message}')
             hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
             hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
 
 while True:
     resp = sock.recv(2048).decode('utf-8')
-    logging.info(resp)
+    logging.info(f'RESP: {resp}')
 
     if resp.startswith('PING'):
-        logging.info(f'PONG RESP {resp}')
+        logging.info(f'PONG RESP: {resp}')
         sock.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
     elif len(resp) > 0:
         send_message(resp)

@@ -3,3 +3,4 @@ usage.log
 __pycache__
 peepoJam.py
 *.txt
+*.log
