@@ -100,11 +100,14 @@ def send_message(resp):
             hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
 
 while True:
-    resp = sock.recv(4096).decode('utf-8')
-    logging.info(f'RESP: {resp}')
-
-    if resp.startswith('PING'):
-        logging.info(f'PONG RESP: {resp}')
-        sock.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
-    elif len(resp) > 0:
-        send_message(resp)
+    resp = sock.recv(1024).decode('utf-8', 'ignore')
+    messages = resp.split('\r\n')
+    messages = list(filter(None, messages))
+    for message in messages:
+        logging.info(f'RESP: {repr(message)}')
+        if message == '' or len(message) <= 1:
+            continue
+        if message.startswith('PING'):
+            sock.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
+        elif message.startswith('PRIVMSG'):
+            send_message(message)
