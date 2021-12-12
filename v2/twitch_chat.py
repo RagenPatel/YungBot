@@ -12,7 +12,7 @@ import json
 from discord import Webhook, RequestsWebhookAdapter
 
 load_dotenv()
-logging.basicConfig(filename='twitchchat.log', level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(filename='twitchchat.log', level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', filemode='w', datefmt='%Y-%m-%d %H:%M:%S')
 
 def send_custom_message(message):
     hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
