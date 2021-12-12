@@ -100,7 +100,7 @@ def send_message(resp):
             hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
 
 while True:
-    resp = sock.recv(2048).decode('utf-8')
+    resp = sock.recv(4096).decode('utf-8')
     logging.info(f'RESP: {resp}')
 
     if resp.startswith('PING'):
