@@ -86,7 +86,7 @@ def get_message_info(message):
     return None, None, None
 
 def send_message(resp):
-    arr = resp.split('\n')
+    arr = list(filter(None, resp.split('\n')))
 
     for chat in arr:
         username, channel, message = get_message_info(chat)
@@ -109,5 +109,5 @@ while True:
             continue
         if message.startswith('PING'):
             sock.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
-        elif message.startswith('PRIVMSG'):
+        elif len(message) > 1:
             send_message(message)
