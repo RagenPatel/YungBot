@@ -58,7 +58,7 @@ class TwitchClip(commands.Cog):
 
         streamer_id = streamer_info[0]['id']
 
-        create_clip = self.twitch.create_clip(broadcaster_id=streamer_id, has_delay=True)
+        create_clip = self.twitch.create_clip(broadcaster_id=streamer_id)
 
         if 'error' in create_clip:
             embed = discord.Embed(title=f"{create_clip['message']}", color=discord.Colour.from_rgb(255, 0, 0))
