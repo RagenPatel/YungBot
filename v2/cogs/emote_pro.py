@@ -73,7 +73,9 @@ class Emotes(commands.Cog):
                     await message.channel.send(file=discord.File('./emotesImages/' + word + '.png'))
                 else:
                     # call helper method
-                    emote_url = self.check_normal_emote(word)
+                    emote_url = self.check_normal_emote(word).strip()
+                    if emote_url == 'nil':
+                        return
                     if emote_url is not None:
                         data = await self.send_image(emote_url)
                         if data is not None:
