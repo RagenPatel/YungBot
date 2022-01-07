@@ -27,15 +27,7 @@ class TwitchClip(commands.Cog):
                                 database=os.getenv("PGDATABASE"))
 
         self.curs = self.conn.cursor()
-        self.curs.execute("SELECT * FROM twitchclips")
-        rows = self.curs.fetchall()
-
-        for row in rows:
-            if row[0] == 2:
-                self.access_token = row[2]
-            
-            if row[0] == 3:
-                self.refresh_token = row[2]
+        self.fetch_tokens()
         
         self.scope = [AuthScope.CLIPS_EDIT]
 
@@ -50,15 +42,8 @@ class TwitchClip(commands.Cog):
 
         self.update_twitch_tokens()
 
-        if streamer == "tt" or streamer == "t1" or streamer == "t":
-            streamer = "loltyler1"
-        elif streamer == "x" or streamer == "cow":
-            streamer = "xqcow"
-        elif streamer == "dlift" or streamer == "lift":
-            streamer = "doublelift"
-
         # Get the streamer's ID
-        streamer_info = self.twitch.get_users(logins=[streamer])['data']
+        streamer_info = self.streamer_check(streamer)
 
         if len(streamer_info) == 0:
             embed = discord.Embed(title="Streamer not found", color=discord.Colour.from_rgb(255, 0, 0))
@@ -66,7 +51,6 @@ class TwitchClip(commands.Cog):
             return
 
         streamer_id = streamer_info[0]['id']
-
         create_clip = self.twitch.create_clip(broadcaster_id=streamer_id)
 
         if 'error' in create_clip:
@@ -83,6 +67,8 @@ class TwitchClip(commands.Cog):
         await ctx.send(clip_url)
 
     def update_twitch_tokens(self):
+        self.fetch_tokens()
+
         # refresh twitch
         new_tokens = refresh_access_token(self.refresh_token, self.client_id, self.client_secret)
         self.access_token = new_tokens[0]
@@ -94,6 +80,28 @@ class TwitchClip(commands.Cog):
 
         self.curs.execute(update_access_query)
         self.curs.execute(update_refresh_query)
+    
+    def fetch_tokens(self):
+        self.curs.execute("SELECT * FROM twitchclips")
+        rows = self.curs.fetchall()
+
+        for row in rows:
+            if row[0] == 2:
+                self.access_token = row[2]
+            
+            if row[0] == 3:
+                self.refresh_token = row[2]
+
+    def streamer_check(self, streamer):
+        if streamer == "tt" or streamer == "t1" or streamer == "t":
+            streamer = "loltyler1"
+        elif streamer == "x" or streamer == "cow":
+            streamer = "xqcow"
+        elif streamer == "dlift" or streamer == "lift":
+            streamer = "doublelift"
+
+        return self.twitch.get_users(logins=[streamer])['data']
+
 
 def setup(bot):
     bot.add_cog(TwitchClip(bot))
