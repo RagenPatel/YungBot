@@ -39,14 +39,23 @@ class TwitchClip(commands.Cog):
         
         self.scope = [AuthScope.CLIPS_EDIT]
 
+        self.update_twitch_tokens()
+
         self.twitch.set_user_authentication(self.access_token, self.scope, self.refresh_token)
 
 
-    @commands.command()
+    @commands.command(aliases=['c'])
     async def clip(self, ctx, streamer):
         """Get a Twitch Clip"""
 
         self.update_twitch_tokens()
+
+        if streamer == "tt" or streamer == "t1" or streamer == "t":
+            streamer = "loltyler1"
+        elif streamer == "x" or streamer == "cow":
+            streamer = "xqcow"
+        elif streamer == "dlift" or streamer == "lift":
+            streamer = "doublelift"
 
         # Get the streamer's ID
         streamer_info = self.twitch.get_users(logins=[streamer])['data']
