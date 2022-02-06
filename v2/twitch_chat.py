@@ -96,8 +96,9 @@ def send_message(resp):
 
         if username in db_info:
             logging.info(f'SEND_MESSAGE: {username}, {channel}, {message}')
-            hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
-            hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
+            if os.getenv('TWITCH_IGNORE') not in message:
+                hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
+                hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
 
 while True:
     resp = sock.recv(1024).decode('utf-8', 'ignore')
