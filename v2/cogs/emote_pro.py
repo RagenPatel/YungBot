@@ -60,6 +60,13 @@ class Emotes(commands.Cog):
                     msg = await channel.send("🤔")
                     await msg.delete()
 
+            elif len(word) > 2 and word[0] == '@' and word[-1] == '@':
+                channel = message.channel
+                emote_url = self.query_7tv(word[1:len(word)-1])
+
+                if (emote_url is not None):
+                    await channel.send(emote_url)
+
             elif word == 'D:':
                 await message.channel.send(file=discord.File('./emotesImages/D.png'))
             else:
@@ -76,7 +83,7 @@ class Emotes(commands.Cog):
                     emote_normal = self.check_normal_emote(word)
                     if (emote_normal is None):
                         continue
-                    
+
                     emote_url = emote_normal.strip()
                     if emote_url == 'nil':
                         continue
@@ -317,6 +324,46 @@ class Emotes(commands.Cog):
                         emote['id']) + '.gif'
 
         return first_emote_url, data
+
+    def query_7tv(self, emote):
+        query = {
+            'query': """
+                query($query: String!,$page: Int,$pageSize: Int,$globalState: String,$sortBy: String,$sortOrder: 
+                Int,$channel: String,$submitted_by: String,$filter: EmoteFilter) {search_emotes(query: $query,limit: 
+                $pageSize,page: $page,pageSize: $pageSize,globalState: $globalState,sortBy: $sortBy,sortOrder: $sortOrder,
+                channel: $channel,submitted_by: $submitted_by,filter: $filter) {id,visibility,urls,owner {id,display_name,role {id,name,color},banned}urls,name,tags}}
+            """,
+            'variables': {
+                "query": emote,
+                "page": 1,
+                "pageSize": 36,
+                "limit": 36,
+                "globalState": None,
+                "sortBy": "popularity",
+                "sortOrder": 0,
+                "channel": None,
+                "submitted_by": None
+            }
+        }
+
+        url = "https://7tv.io/v2/gql"
+        r = requests.post(url, json=query)
+
+        data = r.json()
+
+        if ('errors' in data):
+            return None
+
+        data = data['data']['search_emotes']
+
+        if len(data) > 0:
+            emote_url = data[0]['urls'][1][1]
+            check_gif = requests.head(emote_url+'.gif').headers['Content-Type']
+
+            if (check_gif == 'image/gif'):
+                return emote_url+'.gif'
+
+            return emote_url
 
 
 def setup(bot):
