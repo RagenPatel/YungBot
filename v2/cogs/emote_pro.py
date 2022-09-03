@@ -11,6 +11,7 @@ import aiohttp
 
 import psycopg2
 from requests.api import request
+import asyncio
 
 load_dotenv()
 
@@ -21,6 +22,7 @@ class Emotes(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def post_emotes(self, message):
+        print('cog onlistener emote pro')
         """Posts emote if found in a message."""
         if message.author == self.bot.user:
             return  # no recursive loop from bot posts
@@ -366,5 +368,5 @@ class Emotes(commands.Cog):
             return emote_url
 
 
-def setup(bot):
-    bot.add_cog(Emotes(bot))
+async def setup(bot):
+    await bot.add_cog(Emotes(bot))

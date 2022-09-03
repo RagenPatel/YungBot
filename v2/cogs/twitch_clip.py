@@ -21,20 +21,20 @@ class TwitchClip(commands.Cog):
         self.twitch = Twitch(self.client_id, self.client_secret)
 
         self.conn = psycopg2.connect(user=os.getenv("PGUSER"),
-                                password=os.getenv("PGPASSWORD"),
-                                host=os.getenv("PGHOST"),
-                                port=os.getenv("PGPORT"),
-                                database=os.getenv("PGDATABASE"))
+                                     password=os.getenv("PGPASSWORD"),
+                                     host=os.getenv("PGHOST"),
+                                     port=os.getenv("PGPORT"),
+                                     database=os.getenv("PGDATABASE"))
 
         self.curs = self.conn.cursor()
         self.fetch_tokens()
-        
+
         self.scope = [AuthScope.CLIPS_EDIT]
 
         self.update_twitch_tokens()
 
-        self.twitch.set_user_authentication(self.access_token, self.scope, self.refresh_token)
-
+        self.twitch.set_user_authentication(
+            self.access_token, self.scope, self.refresh_token)
 
     @commands.command(aliases=['c'])
     async def clip(self, ctx, streamer):
@@ -46,7 +46,8 @@ class TwitchClip(commands.Cog):
         streamer_info = self.streamer_check(streamer)
 
         if len(streamer_info) == 0:
-            embed = discord.Embed(title="Streamer not found", color=discord.Colour.from_rgb(255, 0, 0))
+            embed = discord.Embed(title="Streamer not found",
+                                  color=discord.Colour.from_rgb(255, 0, 0))
             await ctx.send(embed=embed)
             return
 
@@ -54,14 +55,16 @@ class TwitchClip(commands.Cog):
         create_clip = self.twitch.create_clip(broadcaster_id=streamer_id)
 
         if 'error' in create_clip:
-            embed = discord.Embed(title=f"{create_clip['message']}", color=discord.Colour.from_rgb(255, 0, 0))
+            embed = discord.Embed(
+                title=f"{create_clip['message']}", color=discord.Colour.from_rgb(255, 0, 0))
             await ctx.send(embed=embed)
             return
         elif len(create_clip['data']) == 0:
-            embed = discord.Embed(title="Streamer not found", color=discord.Colour.from_rgb(255, 0, 0))
+            embed = discord.Embed(title="Streamer not found",
+                                  color=discord.Colour.from_rgb(255, 0, 0))
             await ctx.send(embed=embed)
             return
-        
+
         clip_url = f"https://clips.twitch.tv/{create_clip['data'][0]['id']}"
 
         await ctx.send(clip_url)
@@ -70,7 +73,8 @@ class TwitchClip(commands.Cog):
         self.fetch_tokens()
 
         # refresh twitch
-        new_tokens = refresh_access_token(self.refresh_token, self.client_id, self.client_secret)
+        new_tokens = refresh_access_token(
+            self.refresh_token, self.client_id, self.client_secret)
         self.access_token = new_tokens[0]
         self.refresh_token = new_tokens[1]
 
@@ -80,7 +84,7 @@ class TwitchClip(commands.Cog):
 
         self.curs.execute(update_access_query)
         self.curs.execute(update_refresh_query)
-    
+
     def fetch_tokens(self):
         self.curs.execute("SELECT * FROM twitchclips")
         rows = self.curs.fetchall()
@@ -88,7 +92,7 @@ class TwitchClip(commands.Cog):
         for row in rows:
             if row[0] == 2:
                 self.access_token = row[2]
-            
+
             if row[0] == 3:
                 self.refresh_token = row[2]
 
@@ -103,5 +107,5 @@ class TwitchClip(commands.Cog):
         return self.twitch.get_users(logins=[streamer])['data']
 
 
-def setup(bot):
-    bot.add_cog(TwitchClip(bot))
+async def setup(bot):
+    await bot.add_cog(TwitchClip(bot))

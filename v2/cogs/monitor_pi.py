@@ -8,6 +8,7 @@ import subprocess
 
 load_dotenv()
 
+
 class PiStats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -17,21 +18,25 @@ class PiStats(commands.Cog):
         """Get Raspberry Pi usage info. (i.e. temp, CPU/RAM usage)"""
         temp = self.getTemp()
 
-        embedVar = discord.Embed(title="Pi Usage", color=discord.Colour.from_rgb(temp[1][0], temp[1][1], temp[1][2]))
-        embedVar.add_field(name=str(temp[0])+"°C", value="CPU Temp", inline=True)
-        
+        embedVar = discord.Embed(title="Pi Usage", color=discord.Colour.from_rgb(
+            temp[1][0], temp[1][1], temp[1][2]))
+        embedVar.add_field(
+            name=str(temp[0])+"°C", value="CPU Temp", inline=True)
+
         embedVar = self.getCPU(embedVar)
         embedVar = self.getCPUFreq(embedVar)
         embedVar = self.getCPULoad(embedVar)
         embedVar = self.getRAM(embedVar)
-        embedVar.add_field(name=self.getBootTime(), value="Boot Time", inline=False)
+        embedVar.add_field(name=self.getBootTime(),
+                           value="Boot Time", inline=False)
 
         await ctx.send(embed=embedVar)
 
     @commands.command()
     async def reboot(self, ctx):
         """Reboot Pi."""
-        embed = discord.Embed(title="Rebooting...", color=discord.Colour.from_rgb(255, 219, 110))
+        embed = discord.Embed(title="Rebooting...",
+                              color=discord.Colour.from_rgb(255, 219, 110))
         await ctx.send(embed=embed)
 
         os.system('sudo shutdown -r now')
@@ -39,7 +44,8 @@ class PiStats(commands.Cog):
     @commands.command()
     async def kill(self, ctx):
         """Kills kappabot 😈😈"""
-        embed = discord.Embed(title="Killing Kappabot", color=discord.Colour.from_rgb(245, 49, 49))
+        embed = discord.Embed(title="Killing Kappabot",
+                              color=discord.Colour.from_rgb(245, 49, 49))
 
         msg = await ctx.send(embed=embed)
 
@@ -58,7 +64,7 @@ class PiStats(commands.Cog):
 
     # Helpers ----------------------------------------------------
     def getCPU(self, embed):
-        # per core 
+        # per core
         # @returns: [12.2, 1.4, 32.1, 24]   load % for each core
         cpu = psutil.cpu_percent(percpu=True)
 
@@ -79,16 +85,16 @@ class PiStats(commands.Cog):
         embed.add_field(name=str(load), value="CPU Load: 1m 5m 15m")
         return embed
 
-
     # @returns: % of RAM usage
+
     def getRAM(self, embed):
         ram = psutil.virtual_memory()[2]
 
         embed.add_field(name=str(ram)+"%", value="RAM Usage")
         return embed
 
-
     # @returns: Temp in C
+
     def getTemp(self):
         temp = psutil.sensors_temperatures()['cpu_thermal'][0][1]
 
@@ -98,7 +104,7 @@ class PiStats(commands.Cog):
             return (temp, (77, 204, 134))
         elif temp < 45:
             return (temp, (250, 150, 1))
-        
+
         return (temp, (223, 53, 57))
 
     # @returns: Long for last boottime of the system
@@ -106,5 +112,6 @@ class PiStats(commands.Cog):
         print("getting time")
         return datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")
 
-def setup(bot):
-    bot.add_cog(PiStats(bot))
+
+async def setup(bot):
+    await bot.add_cog(PiStats(bot))
