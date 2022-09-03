@@ -100,7 +100,7 @@ class TwitchClip(commands.Cog):
         if streamer == "tt" or streamer == "t1" or streamer == "t":
             streamer = "loltyler1"
         elif streamer == "x" or streamer == "cow":
-            streamer = "xqcow"
+            streamer = "xqc"
         elif streamer == "dlift" or streamer == "lift":
             streamer = "doublelift"
 
