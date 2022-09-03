@@ -77,6 +77,8 @@ class Emotes(commands.Cog):
                 filenames.remove('.DS_Store')
                 filenames_concat = [x[:-4] for x in filenames]
 
+                word = word.lower()
+
                 if word in filenames_concat:
                     self.emote_stats_to_postgres(word)
                     await message.channel.send(file=discord.File('./emotesImages/' + word + '.png'))
