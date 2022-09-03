@@ -22,7 +22,6 @@ class Emotes(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def post_emotes(self, message):
-        print('cog onlistener emote pro')
         """Posts emote if found in a message."""
         if message.author == self.bot.user:
             return  # no recursive loop from bot posts
