@@ -11,6 +11,7 @@ import aiohttp
 
 import psycopg2
 from requests.api import request
+import asyncio
 
 load_dotenv()
 
@@ -74,6 +75,8 @@ class Emotes(commands.Cog):
                 filenames.remove('D.png')
                 filenames.remove('.DS_Store')
                 filenames_concat = [x[:-4] for x in filenames]
+
+                word = word.lower()
 
                 if word in filenames_concat:
                     self.emote_stats_to_postgres(word)
@@ -366,5 +369,5 @@ class Emotes(commands.Cog):
             return emote_url
 
 
-def setup(bot):
-    bot.add_cog(Emotes(bot))
+async def setup(bot):
+    await bot.add_cog(Emotes(bot))
