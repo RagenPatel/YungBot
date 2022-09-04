@@ -9,15 +9,20 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
 
-from discord import Webhook, RequestsWebhookAdapter
+from discord import SyncWebhook
 
 load_dotenv()
-logging.basicConfig(filename='twitchchat.log', level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', filemode='w', datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(filename='twitchchat.log', level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)-8s %(message)s', filemode='w', datefmt='%Y-%m-%d %H:%M:%S')
+
 
 def send_custom_message(message):
-    hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
-    hook.send("Error Connecting to channels: \`\`\`" + message + "\`\`\`", username="🚨 Mod 🚨", avatar_url="https://upload.wikimedia.org/wikipedia/commons/e/ea/Settings_%28iOS%29.png")
-    logging.warning("SEND_CUSTOM_MESSAGE: Error Connecting to channels: \`\`\`" + message + "\`\`\`")
+    hook = SyncWebhook.partial(webhookid, webhooktoken)
+    hook.send("Error Connecting to channels: \`\`\`" + message + "\`\`\`", username="🚨 Mod 🚨",
+              avatar_url="https://upload.wikimedia.org/wikipedia/commons/e/ea/Settings_%28iOS%29.png")
+    logging.warning(
+        "SEND_CUSTOM_MESSAGE: Error Connecting to channels: \`\`\`" + message + "\`\`\`")
+
 
 def jsonify_data(data):
     dat = {}
@@ -29,12 +34,13 @@ def jsonify_data(data):
 
     return dat
 
+
 def load_info_from_db():
-    conn = psycopg2.connect(user = os.getenv("PGUSER"),
-                                password = os.getenv("PGPASSWORD"),
-                                host = os.getenv("PGHOST"),
-                                port = os.getenv("PGPORT"),
-                                database = os.getenv("PGDATABASE"))
+    conn = psycopg2.connect(user=os.getenv("PGUSER"),
+                            password=os.getenv("PGPASSWORD"),
+                            host=os.getenv("PGHOST"),
+                            port=os.getenv("PGPORT"),
+                            database=os.getenv("PGDATABASE"))
 
     with conn:
         curs = conn.cursor(cursor_factory=RealDictCursor)
@@ -42,6 +48,7 @@ def load_info_from_db():
         curs.execute(query)
         dat = curs.fetchall()
         return jsonify_data(dat)
+
 
 db_info = load_info_from_db()
 
@@ -76,14 +83,17 @@ for row in db_info:
     logging.info(f'JOINING: {row}')
     sock.send(f"JOIN {db_info[row]['channel_id']}\n".encode('utf-8'))
 
+
 def get_message_info(message):
-    search = re.search(':(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*?) :(.*)', message)
+    search = re.search(
+        ':(.*)\!.*@.*\.tmi\.twitch\.tv PRIVMSG #(.*?) :(.*)', message)
 
     if search is not None:
         username, channel, message = search.groups()
         return username, channel, message
 
     return None, None, None
+
 
 def send_message(resp):
     arr = list(filter(None, resp.split('\n')))
@@ -97,8 +107,10 @@ def send_message(resp):
         if username in db_info:
             logging.info(f'SEND_MESSAGE: {username}, {channel}, {message}')
             if os.getenv('TWITCH_IGNORE') not in message:
-                hook = Webhook.partial(webhookid, webhooktoken, adapter=RequestsWebhookAdapter())
-                hook.send(message, username=username + " in #" + channel + " chat", avatar_url=db_info[username]['channel_image'])
+                hook = SyncWebhook.partial(webhookid, webhooktoken)
+                hook.send(message, username=username + " in #" + channel +
+                          " chat", avatar_url=db_info[username]['channel_image'])
+
 
 while True:
     resp = sock.recv(1024).decode('utf-8', 'ignore')
