@@ -1,6 +1,8 @@
 import discord
 import os
 from discord.ext import commands
+from discord import Interaction
+from discord import app_commands
 import datetime
 import psutil
 from dotenv import load_dotenv
@@ -10,12 +12,11 @@ load_dotenv()
 
 
 class PiStats(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
 
-    @commands.command()
-    async def usage(self, ctx):
-        """Get Raspberry Pi usage info. (i.e. temp, CPU/RAM usage)"""
+    @app_commands.command(name="usage", description="Raspberry pi stats")
+    async def usage(self, interaction: Interaction) -> None:
         temp = self.getTemp()
 
         embedVar = discord.Embed(title="Pi Usage", color=discord.Colour.from_rgb(
@@ -30,24 +31,14 @@ class PiStats(commands.Cog):
         embedVar.add_field(name=self.getBootTime(),
                            value="Boot Time", inline=False)
 
-        await ctx.send(embed=embedVar)
+        await interaction.response.send_message(embed=embedVar)
 
-    @commands.command()
-    async def reboot(self, ctx):
-        """Reboot Pi."""
-        embed = discord.Embed(title="Rebooting...",
-                              color=discord.Colour.from_rgb(255, 219, 110))
-        await ctx.send(embed=embed)
-
-        os.system('sudo shutdown -r now')
-
-    @commands.command()
-    async def kill(self, ctx):
-        """Kills kappabot 😈😈"""
+    @app_commands.command(name="kill", description="pull the plug on Kappabot")
+    async def kill(self, interaction: Interaction) -> None:
         embed = discord.Embed(title="Killing Kappabot",
                               color=discord.Colour.from_rgb(245, 49, 49))
 
-        msg = await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
         os.system('sudo pkill -f tweet_posts.py')
         os.system('sudo pkill -f python_discord.py')
@@ -56,13 +47,16 @@ class PiStats(commands.Cog):
         os.system('sudo pkill -f post_anime_episode_updates.py')
         os.system('sudo pkill -f reset_twitter_script.py')
 
-    @commands.command()
-    async def clearsongs(self, ctx):
-        """Clear all songs from botbot"""
+    @app_commands.command(name="reboot", description="reboot pi")
+    async def reboot(self, interaction: Interaction) -> None:
+        embed = discord.Embed(title="Rebooting...",
+                              color=discord.Colour.from_rgb(255, 219, 110))
 
-        os.system('sudo rm -rf /home/pi/Yashas-DiscordBot/discordbot/*.mp3')
+        os.system('sudo shutdown -r now')
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    # Helpers ----------------------------------------------------
+        # Helpers ----------------------------------------------------
+
     def getCPU(self, embed):
         # per core
         # @returns: [12.2, 1.4, 32.1, 24]   load % for each core
