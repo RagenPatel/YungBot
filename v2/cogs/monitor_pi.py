@@ -49,11 +49,14 @@ class PiStats(commands.Cog):
 
     @app_commands.command(name="reboot", description="reboot pi")
     async def reboot(self, interaction: Interaction) -> None:
-        embed = discord.Embed(title="Rebooting...",
-                              color=discord.Colour.from_rgb(255, 219, 110))
+        if interaction.user.id == 173610714433454084 or interaction.user.id == 173611085671170048:
+            embed = discord.Embed(title="Rebooting...",
+                                  color=discord.Colour.from_rgb(255, 219, 110))
 
-        os.system('sudo shutdown -r now')
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+            os.system('sudo shutdown -r now')
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+        else:
+            await interaction.response.send_message(content="You don't have access to this command", ephemeral=True)
 
         # Helpers ----------------------------------------------------
 
