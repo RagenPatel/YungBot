@@ -51,6 +51,9 @@ async def sync(ctx: commands.Context, guilds: commands.Greedy[discord.Object],
 !sync id_1 id_2 -> Syncs guilds with id 1 and 2
     """
 
+    if ctx.author.id != 173610714433454084:
+        return
+
     if not guilds:
         if spec == "~":
             synced = await ctx.bot.tree.sync(guild=ctx.guild)
