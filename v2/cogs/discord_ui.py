@@ -8,9 +8,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# global
-emote_to_send = ""
-
 
 class TestDiscord(commands.Cog):
     def __init__(self, bot) -> None:
@@ -23,7 +20,7 @@ class TestDiscord(commands.Cog):
             placeholder="Test",
             options=[
                 discord.SelectOption(
-                    label="7tv", emoji="👌", description="7tv", default=True, value=0),
+                    label="7tv", emoji="👌", description="7tv", value=0),
                 discord.SelectOption(
                     label="FrankerFaceZ", emoji="✨", description="FrankerFaceZ", value=1),
                 discord.SelectOption(
@@ -66,10 +63,10 @@ class TestDiscord(commands.Cog):
             if len(emote_dict) > 0:
                 if '2' in emote_dict[0]['urls']:
                     # PSQL stuff here
-                    return emote_dict[0]['urls']['2']
+                    return emote_dict[0]['urls']['2'], emote_dict
                 elif '1' in emote_dict[0]['urls']:
                     # PSQL stuff here
-                    return emote_dict[0]['urls']['1']
+                    return emote_dict[0]['urls']['1'], emote_dict
 
             return None
 
@@ -110,9 +107,11 @@ class TestDiscord(commands.Cog):
                     emote_url+'.gif').headers['Content-Type']
 
                 if (check_gif == 'image/gif'):
-                    return emote_url+'.gif'
+                    return emote_url+'.gif', data
 
-                return emote_url
+                return emote_url, data
+
+            return None
 
         async def query_BTTV(emote):
             r = requests.get(
@@ -129,16 +128,20 @@ class TestDiscord(commands.Cog):
 
             return first_emote_url, data
 
+        emote_list_index = 0
+        emote_to_send = ""
+
         async def my_callback(interaction: Interaction):
-            emote_to_send = ''
-            print(select.values)
+            nonlocal emote_to_send
+            nonlocal emote_list_index
 
             if select.values[0] == '0':
-                emote_to_send = await query_7tv(emote)
+                emote_from_7tv, data = await query_7tv(emote)
+
+                if emote_from_7tv != None:
+                    emote_to_send = emote_from_7tv
             elif select.values[0] == '1':
-                ffz = await get_emote_from_frankerfacez(emote)
-                print(ffz)
-                print('ffz ^')
+                ffz, data = await get_emote_from_frankerfacez(emote)
                 if ffz != None:
                     formatted_ffz = "https://" + ffz[2:]
                     emote_to_send = formatted_ffz
@@ -156,33 +159,107 @@ class TestDiscord(commands.Cog):
             #     self.emote_stats_to_postgres(emote)
             #     await message.channel.send(formatted_url)
 
-            await interaction.response.edit_message(content=f"{emote_to_send}")
+            new_view = discord.ui.View()
+            new_view.add_item(select)
+
+            send_button = discord.ui.Button(
+                label="Send", style=discord.ButtonStyle.green, custom_id="send")
+            next_button = discord.ui.Button(
+                label="Next", custom_id="next_emote")
+            previous_button = discord.ui.Button(
+                label="Previous")
+            new_view.add_item(send_button)
+            new_view.add_item(next_button)
+            new_view.add_item(previous_button)
+
+            async def send(interaction: Interaction):
+                nonlocal emote_to_send
+                await interaction.response.send_message(content=f"{emote_to_send}")
+
+            emote_list_index = 0
+
+            async def next_emote(interaction: Interaction):
+                nonlocal emote_list_index
+                nonlocal emote_to_send
+
+                emote_list_index = 0 if (
+                    emote_list_index + 1) >= len(data) else (emote_list_index + 1)
+
+                if select.values[0] == '0':
+                    next_emote_data = data[emote_list_index]
+                    emote_url = next_emote_data['urls'][1][1]
+                    check_gif = requests.head(
+                        emote_url+'.gif').headers['Content-Type']
+
+                    if (check_gif == 'image/gif'):
+                        emote_to_send = f"{emote_url}.gif"
+                    else:
+                        emote_to_send = f"{emote_url}.png"
+                elif select.values[0] == '1':
+                    next_emote_data = data[emote_list_index]
+                    if '2' in next_emote_data['urls']:
+                        # PSQL stuff here
+                        ffz = next_emote_data['urls']['2']
+                        formatted_ffz = "https://" + ffz[2:]
+                        emote_to_send = formatted_ffz
+                    elif '1' in next_emote_data['urls']:
+                        # PSQL stuff here
+                        ffz = next_emote_data['urls']['1']
+                        formatted_ffz = "https://" + ffz[2:]
+                        emote_to_send = formatted_ffz
+                elif select.values[0] == '2':
+                    next_emote_data = data[emote_list_index]
+                    emote_to_send = f"https://cdn.betterttv.net/emote/{next_emote_data['id']}/2x{'.gif' if next_emote_data['imageType'] == 'gif' else '.png'}"
+
+                await interaction.response.edit_message(content=f"{emote_to_send}")
+
+            async def previous_emote(interaction: Interaction):
+                nonlocal emote_list_index
+                nonlocal emote_to_send
+
+                emote_list_index = (len(data) - 1) if (
+                    emote_list_index - 1) < 0 else (emote_list_index - 1)
+
+                if select.values[0] == '0':
+                    next_emote_data = data[emote_list_index]
+                    emote_url = next_emote_data['urls'][1][1]
+                    check_gif = requests.head(
+                        emote_url+'.gif').headers['Content-Type']
+
+                    if (check_gif == 'image/gif'):
+                        emote_to_send = f"{emote_url}.gif"
+                    else:
+                        emote_to_send = f"{emote_url}.png"
+                elif select.values[0] == '1':
+                    next_emote_data = data[emote_list_index]
+                    if '2' in next_emote_data['urls']:
+                        # PSQL stuff here
+                        ffz = next_emote_data['urls']['2']
+                        formatted_ffz = "https://" + ffz[2:]
+                        emote_to_send = formatted_ffz
+                    elif '1' in next_emote_data['urls']:
+                        # PSQL stuff here
+                        ffz = next_emote_data['urls']['1']
+                        formatted_ffz = "https://" + ffz[2:]
+                        emote_to_send = formatted_ffz
+                elif select.values[0] == '2':
+                    next_emote_data = data[emote_list_index]
+                    emote_to_send = f"https://cdn.betterttv.net/emote/{next_emote_data['id']}/2x{'.gif' if next_emote_data['imageType'] == 'gif' else '.png'}"
+
+                await interaction.response.edit_message(content=f"{emote_to_send}")
+
+            send_button.callback = send
+            next_button.callback = next_emote
+            previous_button.callback = previous_emote
+
+            await interaction.response.edit_message(content=f"{emote_to_send}", view=new_view)
             return
 
         view = discord.ui.View()
         view.add_item(select)
-
-        send_button = discord.ui.Button(
-            label="Send", style=discord.ButtonStyle.green, custom_id="send")
-        next_button = discord.ui.Button(
-            label="Next")
-        previous_button = discord.ui.Button(
-            label="Previous")
-        view.add_item(send_button)
-        view.add_item(next_button)
-        view.add_item(previous_button)
-
-        async def send(interaction: Interaction):
-            print(emote_to_send)
-            print("^ ?")
-            await interaction.response.send_message(content=f"{emote_to_send}")
-
-        send_button.callback = send
         select.callback = my_callback
 
-        default_emote = await query_7tv(emote)
-
-        await interaction.response.send_message(view=view, content=f"{default_emote}", ephemeral=True)
+        await interaction.response.send_message(view=view, ephemeral=True)
 
 
 async def setup(bot):

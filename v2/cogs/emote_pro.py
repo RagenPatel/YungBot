@@ -51,15 +51,11 @@ class Emotes(commands.Cog):
                             await message.channel.send(formatted_url)
             elif len(word) > 2 and word[0] == '#' and word[-1] == '#':
                 channel = message.channel
-                async with channel.typing():
-                    emote_url, data = self.query_BTTV(word[1:len(word)-1])
+                emote_url, data = self.query_BTTV(word[1:len(word)-1])
 
                 if (emote_url is not None):
                     self.emote_stats_to_postgres(word[1:len(word)-1])
                     msg = await channel.send(emote_url)
-                else:
-                    msg = await channel.send("🤔")
-                    await msg.delete()
 
             elif len(word) > 2 and word[0] == '@' and word[-1] == '@':
                 channel = message.channel
