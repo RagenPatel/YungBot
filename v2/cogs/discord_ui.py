@@ -17,12 +17,12 @@ class TestDiscord(commands.Cog):
     @app_commands.command(name="emote", description="Check emotes")
     async def emoteCheck(self, interaction: Interaction, emote: str) -> None:
         select = discord.ui.Select(
-            placeholder="Test",
+            placeholder="Select a DB for emotes",
             options=[
                 discord.SelectOption(
-                    label="7tv", emoji="👌", description="7tv", value=0),
+                    label="7tv", emoji="😈", description="7tv", value=0),
                 discord.SelectOption(
-                    label="FrankerFaceZ", emoji="✨", description="FrankerFaceZ", value=1),
+                    label="FrankerFaceZ", emoji="🐕", description="FrankerFaceZ", value=1),
                 discord.SelectOption(
                     label="BTTV", emoji="🎭", description="BTTV", value=2)
             ]
