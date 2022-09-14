@@ -53,8 +53,8 @@ class PiStats(commands.Cog):
             embed = discord.Embed(title="Rebooting...",
                                   color=discord.Colour.from_rgb(255, 219, 110))
 
-            os.system('sudo shutdown -r now')
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            os.system('sudo shutdown -r now')
         else:
             await interaction.response.send_message(content="You don't have access to this command", ephemeral=True)
 
