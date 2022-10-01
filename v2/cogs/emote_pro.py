@@ -356,7 +356,7 @@ class Emotes(commands.Cog):
         data = data['data']['search_emotes']
 
         if len(data) > 0:
-            emote_url = data[0]['urls'][1][1][:-5]
+            emote_url = data[0]['urls'][1][1].replace('.webp', '')
             check_gif = requests.head(emote_url+'.gif').headers['Content-Type']
 
             if (check_gif == 'image/gif'):
