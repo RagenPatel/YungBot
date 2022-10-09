@@ -106,7 +106,7 @@ def send_message(resp):
 
         if username in db_info:
             logging.info(f'SEND_MESSAGE: {username}, {channel}, {message}')
-            if os.getenv('TWITCH_IGNORE') not in message:
+            if os.getenv('TWITCH_IGNORE') not in message and 'esportsbet' not in message.lower():
                 hook = SyncWebhook.partial(webhookid, webhooktoken)
                 hook.send(message, username=username + " in #" + channel +
                           " chat", avatar_url=db_info[username]['channel_image'])
