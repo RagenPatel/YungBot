@@ -13,6 +13,8 @@ import psycopg2
 from requests.api import request
 import asyncio
 
+from sgqlc.endpoint.http import HTTPEndpoint
+
 load_dotenv()
 
 
@@ -325,44 +327,94 @@ class Emotes(commands.Cog):
         return first_emote_url, data
 
     def query_7tv(self, emote):
-        query = {
-            'query': """
-                query($query: String!,$page: Int,$pageSize: Int,$globalState: String,$sortBy: String,$sortOrder: 
-                Int,$channel: String,$submitted_by: String,$filter: EmoteFilter) {search_emotes(query: $query,limit: 
-                $pageSize,page: $page,pageSize: $pageSize,globalState: $globalState,sortBy: $sortBy,sortOrder: $sortOrder,
-                channel: $channel,submitted_by: $submitted_by,filter: $filter) {id,visibility,urls,owner {id,display_name,role {id,name,color},banned}urls,name,tags}}
-            """,
-            'variables': {
-                "query": emote,
-                "page": 1,
-                "pageSize": 36,
-                "limit": 36,
-                "globalState": None,
-                "sortBy": "popularity",
-                "sortOrder": 0,
-                "channel": None,
-                "submitted_by": None
+        # Select your transport with a defined url endpoint
+        url = "https://7tv.io/v3/gql"
+        query_gql = '''
+            query SearchEmotes(
+                $query: String!
+                $page: Int
+                $sort: Sort
+                $limit: Int
+                $filter: EmoteSearchFilter
+            ) {
+                emotes(
+                    query: $query
+                    page: $page
+                    sort: $sort
+                    limit: $limit
+                    filter: $filter
+                ) {
+                    count
+                    items {
+                        id
+                        name
+                        state
+                        trending
+                        owner {
+                            id
+                            username
+                            display_name
+                            style {
+                                color
+                                paint_id
+                                __typename
+                            }
+                            __typename
+                        }
+                        flags
+                        host {
+                            url
+                            files {
+                                name
+                                format
+                                width
+                                height
+                                __typename
+                            }
+                            __typename
+                        }
+                        __typename
+                    }
+                    __typename
+                }
+            }
+        '''
+
+        variables = {
+            "query": emote,
+            "limit": 30,
+            "page": 1,
+            "sort": {
+                "value": "popularity",
+                "order": "DESCENDING"
+            },
+            "filter": {
+                "category": "TOP",
+                "exact_match": False,
+                "case_sensitive": False,
+                "ignore_tags": False,
+                "zero_width": False,
+                "animated": False,
+                "aspect_ratio": ""
             }
         }
 
-        url = "https://7tv.io/v2/gql"
-        r = requests.post(url, json=query)
-
-        data = r.json()
+        endpoint = HTTPEndpoint(url)
+        data = endpoint(query_gql, variables)
 
         if ('errors' in data):
             return None
 
-        data = data['data']['search_emotes']
+        data = data['data']['emotes']['items']
 
         if len(data) > 0:
-            emote_url = data[0]['urls'][1][1].replace('.webp', '')
-            check_gif = requests.head(emote_url+'.gif').headers['Content-Type']
+            emote_url = 'https:' + data[0]['host']['url'] + '/2x'
+            check_gif = requests.get(emote_url+'.gif').headers['Content-Type']
 
             if (check_gif == 'image/gif'):
-                return emote_url+'.gif'
+                return emote_url + '.gif'
 
-            return emote_url
+            return emote_url + '.webp'
 
 
 async def setup(bot):
