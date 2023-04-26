@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import os
+import math
 from dotenv import load_dotenv
 
 from twitchAPI.twitch import Twitch
@@ -68,6 +69,26 @@ class TwitchClip(commands.Cog):
         clip_url = f"https://clips.twitch.tv/{create_clip['data'][0]['id']}"
 
         await ctx.send(clip_url)
+
+    @commands.command(aliases=['ls'])
+    async def lastseen(self, ctx):
+        """Last seen xQc"""
+
+        query = f"SELECT * FROM twitchchat WHERE channel = 'xqc'"
+        self.curs.execute(query)
+        data = self.curs.fetchall()
+        if len(data) > 0:
+            row = data[0]
+            last_seen = math.floor(float(row[3]))
+            last_active = math.floor(float(row[4]))
+
+            message = f"xQc was last seen at <t:{last_seen}> and last active at <t:{last_active}>"
+
+            embed = discord.Embed(
+                title=message, color=discord.Colour.from_rgb(78, 154, 255))
+
+            await ctx.send(embed=embed)
+
 
     def update_twitch_tokens(self):
         self.fetch_tokens()
