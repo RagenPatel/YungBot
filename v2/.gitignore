@@ -2,5 +2,6 @@ venv
 usage.log
 __pycache__
 peepoJam.py
+deploy_react.py
 *.txt
 *.log

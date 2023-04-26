@@ -9,9 +9,18 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
 
+import time
+import math
+
 from discord import SyncWebhook
 
 load_dotenv()
+conn = psycopg2.connect(user=os.getenv("PGUSER"),
+                            password=os.getenv("PGPASSWORD"),
+                            host=os.getenv("PGHOST"),
+                            port=os.getenv("PGPORT"),
+                            database=os.getenv("PGDATABASE"))
+
 logging.basicConfig(filename='twitchchat.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)-8s %(message)s', filemode='w', datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -36,12 +45,6 @@ def jsonify_data(data):
 
 
 def load_info_from_db():
-    conn = psycopg2.connect(user=os.getenv("PGUSER"),
-                            password=os.getenv("PGPASSWORD"),
-                            host=os.getenv("PGHOST"),
-                            port=os.getenv("PGPORT"),
-                            database=os.getenv("PGDATABASE"))
-
     with conn:
         curs = conn.cursor(cursor_factory=RealDictCursor)
         query = "SELECT * FROM twitchchat"
@@ -95,6 +98,52 @@ def get_message_info(message):
     return None, None, None
 
 
+def get_seconds_from_time(value, unit):
+    value = float(value)
+
+    if 'second' in unit:
+        # convert to s
+        return value
+    elif 'minute' in unit:
+        # convert to s
+        return value * 60.0
+    elif 'hour' in unit:
+        # convert to s
+        return value * 60.0 * 60.0
+    elif 'day' in unit:
+        # convert to s
+        return value * 24.0 * 60.0 * 60.0
+
+    return value
+
+def update_xqc_last_seen(message):
+    # xqc last seen message
+    time_now = math.floor(time.time())
+    regex = r"xQc was last seen (\d+) (.*) and (\d+\.\d+) (.*) ago, and last active (\d+) (.*) and (\d+) (.*) ago."
+    split = re.search(regex, message)
+
+    if split:
+        last_seen_val_1 = split.group(1)
+        last_seen_unit_1 = split.group(2)
+        last_seen_val_2 = split.group(3)
+        last_seen_unit_2 = split.group(4)
+        last_active_val_1 = split.group(5)
+        last_active_unit_1 = split.group(6)
+        last_active_val_2 = split.group(7)
+        last_active_unit_2 = split.group(8)
+
+        last_seen_val_in_secs = get_seconds_from_time(last_seen_val_1, last_seen_unit_1) + get_seconds_from_time(last_seen_val_2, last_seen_unit_2)
+        last_active_val_in_secs = get_seconds_from_time(last_active_val_1, last_active_unit_1) + get_seconds_from_time(last_active_val_2, last_active_unit_2)
+
+        last_seen_timestamp = time_now - last_seen_val_in_secs
+        last_active_timestamp = time_now - last_active_val_in_secs
+
+        # insert into DB
+        query = f"UPDATE twitchchat SET last_seen='{last_seen_timestamp}', last_active='{last_active_timestamp}' WHERE channel='xqc'"
+        with conn:
+            curs = conn.cursor(cursor_factory=RealDictCursor)
+            curs.execute(query)
+
 def send_message(resp):
     arr = list(filter(None, resp.split('\n')))
 
@@ -104,7 +153,9 @@ def send_message(resp):
         if username is None:
             continue
 
-        if username in db_info:
+        if username == "schnozebot" and 'xqc was last seen' in message.lower():
+            update_xqc_last_seen(message)
+        elif username in db_info:
             logging.info(f'SEND_MESSAGE: {username}, {channel}, {message}')
             if os.getenv('TWITCH_IGNORE') not in message and 'esportbet' not in message.lower() and 'esb.io/' not in message.lower() and 'esportsbet' not in message.lower() and '100 usdt' not in message.lower() and 'lichess' not in message.lower():
                 hook = SyncWebhook.partial(webhookid, webhooktoken)
