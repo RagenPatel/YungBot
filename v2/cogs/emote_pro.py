@@ -77,21 +77,22 @@ class Emotes(commands.Cog):
                 word = word.lower()
 
                 if word in filenames_concat:
-                    self.emote_stats_to_postgres(word)
-                    await message.channel.send(file=discord.File('./emotesImages/' + word + '.png'))
+                    channel = message.channel
+                    emote_url = self.query_7tv(word)
+
+                    if (emote_url is not None):
+                        await channel.send(emote_url)
                 else:
                     # call helper method
                     emote_normal = self.check_normal_emote(word)
                     if (emote_normal is None):
                         continue
 
-                    emote_url = emote_normal.strip()
-                    if emote_url == 'nil':
-                        continue
-                    if emote_url is not None:
-                        data = await self.send_image(emote_url)
-                        if data is not None:
-                            await message.channel.send(file=discord.File(data, word + ".gif"))
+                    channel = message.channel
+                    emote_url = self.query_7tv(word)
+
+                    if (emote_url is not None):
+                        await channel.send(emote_url)
 
     @commands.command()
     async def emoteusage(self, ctx):
