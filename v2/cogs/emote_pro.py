@@ -67,7 +67,11 @@ class Emotes(commands.Cog):
                     await channel.send(emote_url)
 
             elif word == 'D:':
-                await message.channel.send(file=discord.File('./emotesImages/D.png'))
+                channel = message.channel
+                emote_url = self.query_7tv(word)
+
+                if (emote_url is not None):
+                    await channel.send(emote_url)
             else:
                 filenames = os.listdir('./emotesImages')
                 filenames.remove('D.png')
