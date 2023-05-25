@@ -48,7 +48,7 @@ class Emotes(commands.Cog):
                         emote_url = self.get_emote_from_frankerfacez(emote)
 
                         if emote_url != None:
-                            formatted_url = "https://" + emote_url[2:]
+                            formatted_url = "https://" + emote_url[7:]
                             self.emote_stats_to_postgres(emote)
                             await message.channel.send(formatted_url)
             elif len(word) > 2 and word[0] == '#' and word[-1] == '#':
