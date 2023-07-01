@@ -21,7 +21,7 @@ ipython==7.22.0
 ipython-genutils==0.2.0
 jedi==0.18.0
 jupyter-client==6.2.0
-jupyter-core==4.7.1
+jupyter-core==4.11.2
 multidict==5.1.0
 mutagen==1.46.0
 nest-asyncio==1.5.1
