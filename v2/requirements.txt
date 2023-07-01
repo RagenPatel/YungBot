@@ -45,7 +45,7 @@ requests==2.25.1
 sgqlc==16.1
 six==1.15.0
 toml==0.10.2
-tornado==6.1
+tornado==6.3.2
 traitlets==5.0.5
 twitchAPI==2.5.1
 typing-extensions==3.7.4.3
