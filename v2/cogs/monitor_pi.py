@@ -20,24 +20,26 @@ class PiStats(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    @tasks.loop(seconds=300)
-    async def sendmessage(ctx, self):
-        data = requests.get('http://raspberrypizero.local:5000/')
+    # @tasks.loop(seconds=300)
+    # async def sendmessage(ctx, self):
+    #     data = requests.get('http://raspberrypizero.local:5000/')
 
-        if (data.status_code == 200):
-            conn = psycopg2.connect(user=os.getenv("PGUSER"),
-                                    password=os.getenv("PGPASSWORD"),
-                                    host=os.getenv("PGHOST"),
-                                    port=os.getenv("PGPORT"),
-                                    database=os.getenv("PGDATABASE"))
+    #     if (data.status_code == 200):
+    #         conn = psycopg2.connect(user=os.getenv("PGUSER"),
+    #                                 password=os.getenv("PGPASSWORD"),
+    #                                 host=os.getenv("PGHOST"),
+    #                                 port=os.getenv("PGPORT"),
+    #                                 database=os.getenv("PGDATABASE"))
 
-            with conn:
-                with conn.cursor() as curs:
-                    # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
-                    query = f"INSERT into temps (time, temp, humidity, battery) VALUES ({math.floor(time.time())}, {data.temperature}, {data.humidity}, {data.battery})"
+    #         with conn:
+    #             with conn.cursor() as curs:
+    #                 # Check if emote exists in DB. If it doesnot, add it otherwise increase count by 1
+    #                 query = f"INSERT into temps (time, temp, humidity, battery) VALUES ('{math.floor(time.time())}', {data.temperature}, {data.humidity}, {data.battery})"
 
-                    curs.execute(query)
-            conn.close()
+    #                 curs.execute(query)
+
+    #             conn.commit()
+    #         conn.close()
 
 
     @app_commands.command(name="usage", description="Raspberry pi stats")
