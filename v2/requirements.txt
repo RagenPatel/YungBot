@@ -52,4 +52,4 @@ wcwidth==0.2.5
 websockets==10.1
 yarl==1.6.3
 youtube-dl==2021.12.17
-yt-dlp==2023.2.17
+yt-dlp==2023.9.24
