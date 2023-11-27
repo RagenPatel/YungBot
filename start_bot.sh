@@ -1,5 +1,5 @@
 #!/bin/bash/
-cd ~/YungBot/LeagueDiscord/
+cd ~/home/pi/dev/YungBot/
 git stash
 git pull
 cd v2
