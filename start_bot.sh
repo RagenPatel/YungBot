@@ -1,7 +1,5 @@
 #!/bin/bash/
 cd /home/pi/dev/YungBot/
-git stash
-git pull
 cd v2
 
 source venv/bin/activate
