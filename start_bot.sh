@@ -1,5 +1,5 @@
 #!/bin/bash/
-cd ~/home/pi/dev/YungBot/
+cd /home/pi/dev/YungBot/
 git stash
 git pull
 cd v2
