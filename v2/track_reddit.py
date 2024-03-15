@@ -62,8 +62,10 @@ def fetch_info():
     posts = data['data']['children']
 
     visited_tuples = fetch_visited()
-    visited = {value for x in visited_tuples for value in visited_tuples}
-    
+    visited = []
+    for t in visited_tuples:
+        visited.append(t[1])
+ 
     links = []
     
     add_to_visited = []
