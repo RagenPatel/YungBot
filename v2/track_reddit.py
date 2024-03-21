@@ -85,9 +85,6 @@ def fetch_info():
         elif (post['id'] not in visited and ("tangerine" in match_regex.lower() or "tangerine" in post['selftext'].lower())):
             links.append((post['title'], post['url'], post['selftext'][:999], "Found Tangerine"))
             add_to_visited.append(post['id'])
-        elif (post['id'] not in visited and ("dots" in match_regex.lower() or "dots" in post['selftext'].lower())):
-            links.append((post['title'], post['url'], post['selftext'][:999], "Found Dots"))
-            add_to_visited.append(post['id'])
 
     hook = SyncWebhook.partial(webhookid, webhooktoken)
 
