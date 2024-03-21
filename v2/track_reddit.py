@@ -79,11 +79,11 @@ def fetch_info():
         if ('paypal' in match_regex.lower()):
             continue
 
-        if (post['id'] not in visited and ("kaiju" in match_regex.lower() or "kaiju" in post['selftext'].lower())):
-            links.append((post['title'], post['url'], post['selftext'][:999], "Found Kaiju"))
+        if (post['id'] not in visited and ("oil kings" in match_regex.lower() or "oil kings" in post['selftext'].lower())):
+            links.append((post['title'], post['url'], post['selftext'][:999], "Found Oil Kings"))
             add_to_visited.append(post['id'])
-        elif (post['id'] not in visited and ("gmk" in match_regex.lower() or "gmk" in post['selftext'].lower())):
-            links.append((post['title'], post['url'], post['selftext'][:999], "Found GMK"))
+        elif (post['id'] not in visited and ("tangerine" in match_regex.lower() or "tangerine" in post['selftext'].lower())):
+            links.append((post['title'], post['url'], post['selftext'][:999], "Found Tangerine"))
             add_to_visited.append(post['id'])
         elif (post['id'] not in visited and ("dots" in match_regex.lower() or "dots" in post['selftext'].lower())):
             links.append((post['title'], post['url'], post['selftext'][:999], "Found Dots"))
