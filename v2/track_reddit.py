@@ -80,7 +80,7 @@ def fetch_info():
         match_regex = re.match(os.getenv('TRACKED_PATTERN'), post['title'])
         print(match_regex)
 
-        if (match_regex and 'drunken' in post['title'].lower()):
+        if (post['id'] not in visited and match_regex and 'drunken' in post['title'].lower()):
             links.append((post['title'], post['url'], post['selftext'][:999], "Found 🐌"))
             add_to_visited.append(post['id'])
 
