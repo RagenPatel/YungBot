@@ -55,6 +55,8 @@ def add_visited(visited):
 def fetch_info():
     data = requests.get(url)
 
+    print(data)
+
     if (data.status_code != 200):
         return
     data = data.json()
@@ -72,19 +74,23 @@ def fetch_info():
 
     for post in posts:
         post = post['data']
-        if ('[H]' not in post['title']):
+        print(post)
+        if ('[O]' not in post['title']):
             continue
-        match_regex = re.match(os.getenv('TRACKED_PATTERN'), post['title']).group(2)
+        match_regex = re.match(os.getenv('TRACKED_PATTERN'), post['title'])
+        print(match_regex)
 
-        if ('paypal' in match_regex.lower()):
+        if (match_regex and 'drunken' in post['title'].lower()):
+            links.append((post['title'], post['url'], post['selftext'][:999], "Found 🐌"))
+            add_to_visited.append(post['id'])
             continue
 
-        if (post['id'] not in visited and ("oil kings" in match_regex.lower() or "oil kings" in post['selftext'].lower())):
-            links.append((post['title'], post['url'], post['selftext'][:999], "Found Oil Kings"))
-            add_to_visited.append(post['id'])
-        elif (post['id'] not in visited and ("tangerine" in match_regex.lower() or "tangerine" in post['selftext'].lower())):
-            links.append((post['title'], post['url'], post['selftext'][:999], "Found Tangerine"))
-            add_to_visited.append(post['id'])
+        # if (post['id'] not in visited and ("oil kings" in match_regex.lower() or "oil kings" in post['selftext'].lower())):
+        #     links.append((post['title'], post['url'], post['selftext'][:999], "Found Oil Kings"))
+        #     add_to_visited.append(post['id'])
+        # elif (post['id'] not in visited and ("tangerine" in match_regex.lower() or "tangerine" in post['selftext'].lower())):
+        #     links.append((post['title'], post['url'], post['selftext'][:999], "Found Tangerine"))
+        #     add_to_visited.append(post['id'])
 
     hook = SyncWebhook.partial(webhookid, webhooktoken)
 
