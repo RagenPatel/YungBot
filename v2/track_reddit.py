@@ -83,7 +83,6 @@ def fetch_info():
         if (match_regex and 'drunken' in post['title'].lower()):
             links.append((post['title'], post['url'], post['selftext'][:999], "Found 🐌"))
             add_to_visited.append(post['id'])
-            continue
 
         # if (post['id'] not in visited and ("oil kings" in match_regex.lower() or "oil kings" in post['selftext'].lower())):
         #     links.append((post['title'], post['url'], post['selftext'][:999], "Found Oil Kings"))
