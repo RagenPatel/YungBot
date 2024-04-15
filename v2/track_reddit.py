@@ -84,13 +84,6 @@ def fetch_info():
             links.append((post['title'], post['url'], post['selftext'][:999], "Found 🐌"))
             add_to_visited.append(post['id'])
 
-        # if (post['id'] not in visited and ("oil kings" in match_regex.lower() or "oil kings" in post['selftext'].lower())):
-        #     links.append((post['title'], post['url'], post['selftext'][:999], "Found Oil Kings"))
-        #     add_to_visited.append(post['id'])
-        # elif (post['id'] not in visited and ("tangerine" in match_regex.lower() or "tangerine" in post['selftext'].lower())):
-        #     links.append((post['title'], post['url'], post['selftext'][:999], "Found Tangerine"))
-        #     add_to_visited.append(post['id'])
-
     hook = SyncWebhook.partial(webhookid, webhooktoken)
 
     add_visited(add_to_visited)
@@ -99,6 +92,7 @@ def fetch_info():
         # Post links to discord
         embed = discord.Embed(title=link[3], url=link[1], color=discord.Colour.from_rgb(188, 66, 245))
         embed.add_field(name=link[0], value=link[2])
+        hook.send("@everyone")
         hook.send(embed=embed)
         time.sleep(1)
 
