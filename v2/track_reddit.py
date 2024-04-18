@@ -77,11 +77,12 @@ def fetch_info():
         print(post)
         if ('[O]' not in post['title']):
             continue
-        match_regex = re.match(os.getenv('TRACKED_PATTERN'), post['title'])
-        print(match_regex)
 
-        if (post['id'] not in visited and match_regex and 'drunken' in post['title'].lower()):
+        if (post['id'] not in visited and 'drunken' in post['title'].lower()):
             links.append((post['title'], post['url'], post['selftext'][:999], "Found 🐌"))
+            add_to_visited.append(post['id'])
+        elif (post['id'] not in visited):
+            links.append((post['title'], post['url'], post['selftext'][:999], "Found Something"))
             add_to_visited.append(post['id'])
 
     hook = SyncWebhook.partial(webhookid, webhooktoken)
