@@ -9,3 +9,7 @@ redditPosts.txt
 temp.sh
 getBTTV.py
 *.ipynb
+TempSensorTesting
+*DS_Store*
+*python-version
+log.log
