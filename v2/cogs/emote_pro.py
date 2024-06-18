@@ -75,7 +75,6 @@ class Emotes(commands.Cog):
             else:
                 filenames = os.listdir('./emotesImages')
                 filenames.remove('D.png')
-                filenames.remove('.DS_Store')
                 filenames_concat = [x[:-4] for x in filenames]
 
                 word = word.lower()
