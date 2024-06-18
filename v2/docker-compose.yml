@@ -1,0 +1,8 @@
+services:
+  yungbot:
+    container_name: yungbot
+    image: ra124235345/yungbot
+    build:
+      context: .
+      dockerfile: Dockerfile
+
