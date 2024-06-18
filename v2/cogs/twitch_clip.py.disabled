@@ -6,7 +6,7 @@ import math
 from dotenv import load_dotenv
 
 from twitchAPI.twitch import Twitch
-from twitchAPI.types import AuthScope
+from twitchAPI.type import AuthScope
 from twitchAPI.oauth import UserAuthenticator, refresh_access_token
 
 import psycopg2
